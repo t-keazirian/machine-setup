@@ -22,6 +22,8 @@
     co = checkout
     sw = switch
 
+    wc = log --name-status
+
  # stage all files, including deletions
     aa = add -A
 
