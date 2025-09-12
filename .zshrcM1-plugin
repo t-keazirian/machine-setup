@@ -2,7 +2,7 @@
 # Oh My Zsh + sane defaults
 # =========================
 
-# Path to your oh-my-zsh installation.
+# Path to oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # Use zsh's path array with automatic de-dupe.
@@ -10,10 +10,13 @@ typeset -U path PATH
 
 # Core paths (Apple Silicon Homebrew first)
 path=(/opt/homebrew/sbin /opt/homebrew/bin $path)
+
 # Extra tools
 path=(/opt/homebrew/opt/vim/bin /opt/homebrew/opt/python@3.13/bin $path)
+
 # Personal scripts
 path=("$HOME/Scripts" $path)
+
 # MySQL client
 path=(/opt/homebrew/opt/mysql@8.0/bin $path)
 
@@ -45,7 +48,7 @@ COMPLETION_WAITING_DOTS="true"
 source "$ZSH/oh-my-zsh.sh"
 
 # =================
-# SDKMAN (as before)
+# SDKMAN
 # =================
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
@@ -62,8 +65,8 @@ alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 alias python='/opt/homebrew/opt/python@3.13/bin/python3'
-alias brew-maint-complex="~/Scripts/brew-maintenance.sh"
 alias brew-maint="~/Scripts/brew-maintenance-simple.sh"
+alias brew-maint-complex="~/Scripts/brew-maintenance.sh"
 
 # kubectl alias + completion
 alias k=kubectl
