@@ -22,7 +22,7 @@
     co = checkout
     sw = switch
 
-    wc = log --name-status
+    wc = log --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]" --name-status
 
  # stage all files, including deletions
     aa = add -A
