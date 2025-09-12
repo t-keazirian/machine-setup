@@ -1,16 +1,69 @@
+[user]
+  name  = Taylor Keazirian
+  email = taylork26@gmail.com
+
+[includeIf "gitdir:/Users/taylorkeazirian/Code/TicketMaster/"]
+  path = ~/.gitconfig-tm
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [push]
 	autoSetupRemote = true
-[user]
-	name = Taylor Keazirian
 
 [alias]
-	clean-branches = !"for b in `git branch --list --merged | grep -v master | grep -v \"*\"`; do git branch -d $b; done"
-	# prune remote branches after they have been deleted
-	clean-remote = !"git fetch --prune origin"
+ # --- status / log / navigation ---
+    st = status -sb
+    lg = log --oneline --graph --decorate --all
+
+    co = checkout
+    sw = switch
+
+ # stage all files, including deletions
+    aa = add -A
+
+ # commit and open window for message in vim
+    c = commit -v
+
+ # commit with a message in the command line
+    cm = commit -m
+
+ # Preview only: list local branches that would be deleted
+    clean-branches-dry = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        echo \"[base=$base] would delete:\"; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\"; \
+        }; f"
+
+  # Delete local branches fully merged into the default branch (protect base/main/master/develop)
+    clean-branches = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\" \
+        | while IFS= read -r b; do \
+        [ -n \"$b\" ] && echo \"Deleting $b\" && git branch -d \"$b\"; \
+        done; \
+        }; f"
+
+ # Preview only: show what fetch would do and which branches would be pruned
+    clean-remote-dry = "!f() { \
+        echo '== Dry-run fetch (no changes) =='; \
+        git fetch --dry-run origin; \
+        echo; \
+        echo '== Dry-run prune (stale remote-tracking branches) =='; \
+        git remote prune origin --dry-run; \
+        }; f"
+
+ # Actual cleanup
+    clean-remote = "!git fetch --prune origin"
+
 [init]
 	defaultBranch = main
+[core]
+	autocrlf = input
