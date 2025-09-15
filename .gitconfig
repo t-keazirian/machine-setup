@@ -22,7 +22,11 @@
     co = checkout
     sw = switch
 
+ # "what changed"
     wc = log --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]" --name-status
+
+ # detailed "what changed"
+    wcd = log -p --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]"
 
  # stage all files, including deletions
     aa = add -A
