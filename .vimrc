@@ -182,3 +182,9 @@ highlight SpellLocal ctermfg=green   cterm=underline  gui=undercurl guisp=Green
 highlight Cursor    ctermfg=Black   ctermbg=Yellow cterm=NONE   gui=NONE
 " (Optional) in Insert mode use a colored bar instead of block:
 highlight CursorIM  ctermfg=Black   ctermbg=LightBlue cterm=NONE gui=NONE
+
+" Persistent undo, stored outside the repo
+if has("persistent_undo")
+  set undofile
+  set undodir=~/.vim/undodir
+endif
