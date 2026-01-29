@@ -2,7 +2,7 @@
   name  = Taylor Keazirian
   email = taylork26@gmail.com
 
-[includeIf "gitdir:/Users/taylorkeazirian/Code/TicketMaster/"]
+[includeIf "gitdir:/Users/taylorkeazirian/Code/TicketMaster/**/.git"]
   path = ~/.gitconfig-tm
 
 [filter "lfs"]
@@ -13,6 +13,19 @@
 
 [push]
 	autoSetupRemote = true
+
+[color]
+  ui = true
+
+[commit]
+  verbose = true
+
+[core]
+  autocrlf = input
+  excludesfile = /Users/taylorkeazirian/.gitignore-global
+
+[init]
+	defaultBranch = main
 
 [alias]
  # --- status / log / navigation ---
@@ -69,7 +82,3 @@
  # Actual cleanup
     clean-remote = "!git fetch --prune origin"
 
-[init]
-	defaultBranch = main
-[core]
-	autocrlf = input
