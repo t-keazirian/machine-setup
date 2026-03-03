@@ -23,15 +23,71 @@ path=(/opt/homebrew/opt/mysql@8.0/bin $path)
 # --- Completions BEFORE OMZ so compinit sees them ---
 fpath=(~/.zsh/completions $fpath)
 
-# Must be set BEFORE loading plugins so zsh-nvm sees it
+# =====
+# NVM (lazy-load + auto-switch by searching upward for .nvmrc)
+# =====
 export NVM_DIR="$HOME/.nvm"
-export NVM_AUTO_USE=true   # auto `nvm use` when .nvmrc is present
+typeset -g __NVM_LOADED=0
 
-# Theme & OMZ plugins (include zsh-nvm; keep syntax-highlighting last)
+__load_nvm() {
+  [[ $__NVM_LOADED -eq 1 ]] && return 0
+
+  # Remove stubs first so nvm.sh's own `nvm` function definition sticks
+  unfunction nvm node npm npx 2>/dev/null
+
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  __NVM_LOADED=1
+}
+
+# Lazy stubs — load nvm, then hand off to the real command
+nvm()  { __load_nvm || return 1; nvm  "$@"; }
+node() { __load_nvm || return 1; node "$@"; }
+npm()  { __load_nvm || return 1; npm  "$@"; }
+npx()  { __load_nvm || return 1; npx  "$@"; }
+
+# Walk upward from $PWD looking for a .nvmrc (no external processes)
+__find_up_nvmrc() {
+  local dir="$PWD"
+  while true; do
+    if [ -f "$dir/.nvmrc" ]; then
+      echo "$dir/.nvmrc"
+      return 0
+    fi
+    [ "$dir" = "/" ] && return 1
+    dir="${dir:h}"
+  done
+}
+
+autoload -U add-zsh-hook
+typeset -g __NVMRC_LAST_PATH=""
+
+__nvm_auto_switch() {
+  local nvmrc_path
+  nvmrc_path="$(__find_up_nvmrc)" || nvmrc_path=""
+
+  if [[ -z "$nvmrc_path" ]]; then
+    __NVMRC_LAST_PATH=""
+    return 0
+  fi
+
+  if [[ "$nvmrc_path" = "$__NVMRC_LAST_PATH" ]]; then
+    return 0
+  fi
+  __NVMRC_LAST_PATH="$nvmrc_path"
+
+  __load_nvm || return 0
+  [[ $__NVM_LOADED -eq 1 ]] || return 0
+
+  nvm use --silent >/dev/null 2>&1 || nvm install >/dev/null 2>&1
+}
+
+add-zsh-hook chpwd __nvm_auto_switch
+__nvm_auto_switch
+
+# Theme & OMZ plugins
 ZSH_THEME="bira"
 plugins=(
   git
-  zsh-nvm
   zsh-autosuggestions
   colorize python pylint vundle
   web-search history jsontools macos sdk
