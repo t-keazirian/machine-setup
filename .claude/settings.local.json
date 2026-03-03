@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(zsh:*)"
+      "Bash(zsh:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git:*)"
     ]
   }
 }
