@@ -2,9 +2,6 @@
   name  = Taylor Keazirian
   email = taylork26@gmail.com
 
-[includeIf "gitdir:/Users/taylorkeazirian/Code/TicketMaster/**/.git"]
-  path = ~/.gitconfig-tm
-
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f

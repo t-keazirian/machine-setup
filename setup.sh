@@ -68,13 +68,13 @@ info "4/11  Homebrew bundle"
 if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
-  warn "Installing packages from Brewfile (work taps may fail without VPN)..."
+  warn "Installing packages from Brewfile..."
   if brew bundle install --file="$DOTFILES_DIR/Brewfile" --no-lock; then
     ok "Brew bundle complete"
     done_item "Homebrew packages installed"
   else
-    warn "brew bundle had failures (tm/homebrew likely requires VPN). Continuing."
-    manual_item "On VPN: rerun 'brew bundle install --file=$DOTFILES_DIR/Brewfile --no-lock'"
+    warn "brew bundle had failures. Continuing."
+    manual_item "Rerun 'brew bundle install --file=$DOTFILES_DIR/Brewfile --no-lock' to retry"
   fi
 fi
 

@@ -126,8 +126,6 @@ alias python='/opt/homebrew/opt/python@3.13/bin/python3'
 alias brew-maint="$HOME/Code/machine-setup/scripts/brew-maintenance-simple.sh"
 alias brew-maint-complex="$HOME/Code/machine-setup/scripts/brew-maintenance.sh"
 
-kafkactx() {/Users/taylorkeazirian/Code/TicketMaster/kafkactx/kafkactx.sh "$@"; }
-
 # kubectl alias + completion
 alias k=kubectl
 if [[ $commands[kubectl] ]]; then
@@ -142,9 +140,6 @@ fi
 export ERL_AFLAGS="-kernel shell_history enabled"
 export SPRING_MAIN_BANNER_MODE=off
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="$HOME/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 export PATH="$HOME/.local/bin:$PATH"
 
 # Added by Antigravity
