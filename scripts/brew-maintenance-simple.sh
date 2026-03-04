@@ -11,7 +11,7 @@ echo "========================================" | tee -a "$LOG_FILE"
 {
   echo
   echo "---- brew update ----"
-  brew update -v || echo "brew update failed (likely tm/homebrew-homebrew requires VPN). Continuing..." >&2
+  brew update -v || echo "brew update failed. Continuing..." >&2
 
   echo
   echo "---- brew upgrade ----"

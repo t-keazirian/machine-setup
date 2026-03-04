@@ -30,6 +30,8 @@ Edits to the dotfiles are automatically tracked by Git.
 ## New machine setup
 
 > **Requirements:** Apple Silicon Mac. SSH keys must exist and be registered with GitHub before running.
+>
+> **Convention:** Repos live in `~/Code/`. The setup script creates `~/Code/` if it doesn't exist and clones this repo to `~/Code/machine-setup`.
 
 ### Step 0 — Generate SSH keys (if needed)
 
@@ -74,7 +76,7 @@ sdk install java
 
 1. Installs Xcode Command Line Tools (triggers dialog if missing, then waits)
 2. Installs Homebrew (Apple Silicon path: `/opt/homebrew`)
-3. Clones this repo to `~/Code/machine-setup` (skips if already present)
+3. Creates `~/Code/` if it doesn't exist, then clones this repo to `~/Code/machine-setup` (skips if already present)
 4. Runs `brew bundle install --file=Brewfile --no-lock` — installs all formulae and casks; warns on VPN-only taps but does not exit
 5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
 6. Runs `bootstrap.sh` to create all dotfile symlinks
@@ -88,33 +90,11 @@ Each step prints "already done, skipping" if it detects it has been run before. 
 
 ### What cannot be automated
 
-**`~/.gitconfig-tm`** — work identity, never committed to this repo. The `.gitconfig` uses `includeIf` to pick it up automatically once the file exists. Create it manually:
-
-```bash
-touch ~/.gitconfig-tm
-```
-
-Then add your work identity:
-
-```ini
-[user]
-  name = Your Work Name
-  email = you@work.com
-```
-
-**`tm/homebrew` + `tech-pass`** — these require VPN. After connecting, rerun:
-
-```bash
-brew bundle install --file=~/Code/machine-setup/Brewfile --no-lock
-```
-
 **macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
 
 **JetBrains settings** — use JetBrains Toolbox's built-in settings sync.
 
 **iTerm2 profile** — export your `.itermcolors` theme and JSON profile from iTerm2 > Preferences > Profiles > Export. Optionally add these to the repo later.
-
-**Rancher Desktop PATH block** — added automatically by Rancher Desktop on first launch. No action needed.
 
 **Deno** — install separately:
 

@@ -1,7 +1,5 @@
 tap "hashicorp/tap"
 tap "sdkman/tap"
-# WORK: Requires VPN. Safe to skip on personal machines.
-tap "tm/homebrew", "https://git.tmaws.io/core-platform/homebrew-tm.git"
 brew "openssl@3"
 brew "python@3.13"
 brew "awscli"
@@ -43,8 +41,6 @@ cask "intellij-idea"
 cask "iterm2"
 cask "jetbrains-toolbox"
 cask "slack"
-# WORK: Requires VPN + tm/homebrew tap.
-cask "tm/homebrew/tech-pass"
 vscode "adpyke.vscode-sql-formatter"
 vscode "alexkrechik.cucumberautocomplete"
 vscode "andys8.jest-snippets"
