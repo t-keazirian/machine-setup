@@ -16,7 +16,8 @@ touch "$LOCKFILE"
 # Ensure lock file is removed when script exits
 trap 'rm -f "$LOCKFILE"' EXIT
 
-LOG_DIR=~/Scripts
+LOG_DIR=~/.local/share/brew-maintenance
+mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/brew-maintenance.log"
 MAX_LOGS=5
 LOG_NAME="brew-maintenance.log"
