@@ -34,12 +34,8 @@ link() {
   local src="$1"
   local dest="$2"
 
-  if [ -L "$dest" ]; then
-    echo "Symlink already exists: $dest"
-  else
-    echo "Linking $dest -> $src"
-    ln -s "$src" "$dest"
-  fi
+  echo "Linking $dest -> $src"
+  ln -sf "$src" "$dest"
 }
 
 if [ "$(uname -m)" = "arm64" ]; then
