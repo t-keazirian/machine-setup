@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import sys
+
+def parse_args(argv):
+    p = argparse.ArgumentParser(description="Who's listening on this network port?")
+    p.add_argument("--port", "-p", required=True, help="The network port (e.g., 3000)")
+    return p.parse_args(argv)
+
+def main():
+    args = parse_args(sys.argv[1:])
+    proc = subprocess.run(
+        ["lsof", "-P", "-i", f":{args.port}"],
+        capture_output=True,
+        text=True,
+    )
+
+    out = proc.stdout.strip()
+    if not out:
+        print(f"No listeners found on :{args.port}", file=sys.stderr)
+        sys.exit(1)
+
+    for i, line in enumerate(out.splitlines()):
+        if i == 0 or "LISTEN" in line:
+            print(line)
+
+if __name__ == "__main__":
+    main()

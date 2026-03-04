@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# git-pull-all: pull many repos at once (with dry-run & filters)
+# Scans for Git repos under the current directory (or --recursive)
+# and runs `git pull --recurse-submodules` in each one.
+#
+# Usage examples:
+#   git-pull-all
+#   git-pull-all --dry-run
+#   git-pull-all --exclude "*/archive/*" --exclude "*/deprecated/*"
+#   git-pull-all --only "services/*" --recursive
+#   git-pull-all --no-recurse-submodules
+#
+# Exit status: 0 on success, 1 if any repo failed (but continues processing others).
+
+DRY_RUN=0
+RECURSIVE=0
+USE_SUBMODULES=1
+EXCLUDES=()
+ONLYS=()
+
+print_usage() {
+  cat <<'EOF'
+Usage: git-pull-all [options]
+
+Options:
+  --dry-run                Preview changes (fetch/prune + ahead/behind summary). No pulls.
+  --recursive              Search repos recursively (default: only immediate subdirs).
+  --exclude <glob>         Skip repos whose path matches the glob. Can be repeated.
+  --only <glob>            Only include repos matching this glob. Can be repeated.
+  --no-recurse-submodules  Do not pass --recurse-submodules to git pull.
+  -h, --help               Show this help.
+
+Notes:
+- In dry-run mode, we simulate a pull using 'git fetch --dry-run' and show
+  ahead/behind relative to the upstream (if configured).
+- If a repo has no upstream, we'll say so and skip actual pulls.
+EOF
+}
+
+log_hdr() {
+  printf '\n\033[1m== %s ==\033[0m\n' "$1"
+}
+
+log_info() {
+  printf '  %s\n' "$1"
+}
+
+matches_any_glob() {
+  local path="$1"; shift
+  local g
+  for g in "$@"; do
+    [[ "$path" == $g ]] && return 0
+  done
+  return 1
+}
+
+# Parse args
+while (( "$#" )); do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --recursive) RECURSIVE=1; shift ;;
+    --exclude) EXCLUDES+=("$2"); shift 2 ;;
+    --only) ONLYS+=("$2"); shift 2 ;;
+    --no-recurse-submodules) USE_SUBMODULES=0; shift ;;
+    -h|--help) print_usage; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; print_usage; exit 2 ;;
+  esac
+done
+
+# Discover repos
+repos=()
+if [[ $RECURSIVE -eq 1 ]]; then
+  # Find any .git directories (regular or worktree) under current dir
+  while IFS= read -r d; do
+    repos+=( "$(dirname "$d")" )
+  done < <(find . -type d -name .git -prune | sort)
+else
+  # Only immediate children: */.git
+  for d in */.git; do
+    [[ -d "$d" ]] || continue
+    repos+=( "$(dirname "$d")" )
+  done
+fi
+
+# Apply include/exclude filters
+filtered=()
+for r in "${repos[@]}"; do
+  # Normalize to no-leading-./ for nicer matching / printing
+  r="${r#./}"
+
+  # --only filters: if provided, must match at least one
+  if ((${#ONLYS[@]} > 0)); then
+    matches_any_glob "$r" "${ONLYS[@]}" || continue
+  fi
+
+  # --exclude filters: skip if matches any
+  if ((${#EXCLUDES[@]} > 0)); then
+    if matches_any_glob "$r" "${EXCLUDES[@]}"; then
+      continue
+    fi
+  fi
+
+  filtered+=( "$r" )
+done
+
+if ((${#filtered[@]} == 0)); then
+  echo "No repositories found (after filters)."
+  exit 0
+fi
+
+log_hdr "Found ${#filtered[@]} repos"
+for r in "${filtered[@]}"; do
+  echo " - $r"
+done
+
+errors=0
+
+for repo in "${filtered[@]}"; do
+  log_hdr "$repo"
+  pushd "$repo" >/dev/null || { log_info "Cannot enter $repo"; errors=1; continue; }
+
+  if [[ ! -d .git ]]; then
+    # Worktrees still have .git file; let git handle it
+    if [[ ! -e .git ]]; then
+      log_info "Not a Git repo (missing .git); skipping."
+      popd >/dev/null; continue
+    fi
+  fi
+
+  # Determine current branch and upstream
+  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'DETACHED')"
+  upstream="$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
+
+  log_info "branch: ${branch}"
+  if [[ -n "$upstream" ]]; then
+    log_info "upstream: ${upstream}"
+  else
+    log_info "upstream: (none)"
+  fi
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    log_info "fetch: (dry-run) git fetch --dry-run --prune"
+    # Show what fetch would change; prune preview too
+    git fetch --dry-run --prune || { log_info "fetch dry-run failed"; errors=1; }
+    if [[ -n "$upstream" ]]; then
+      # After fetch preview, compute ahead/behind relative to upstream
+      # (This uses current refs; still useful for a quick summary)
+      behind=0; ahead=0
+      if git rev-parse "$branch" >/dev/null 2>&1 && git rev-parse "$upstream" >/dev/null 2>&1; then
+        behind=$(git rev-list --left-right --count "${branch}...${upstream}" 2>/dev/null | awk '{print $2+0}')
+        ahead=$(git rev-list --left-right --count "${branch}...${upstream}" 2>/dev/null | awk '{print $1+0}')
+        log_info "ahead: ${ahead}, behind: ${behind}"
+      fi
+    fi
+  else
+    # Real pull
+    if [[ $USE_SUBMODULES -eq 1 ]]; then
+      log_info "pull: git pull --recurse-submodules"
+      if ! git pull --recurse-submodules; then
+        log_info "pull failed"; errors=1
+      fi
+    else
+      log_info "pull: git pull"
+      if ! git pull; then
+        log_info "pull failed"; errors=1
+      fi
+    fi
+  fi
+
+  popd >/dev/null
+done
+
+if ((errors > 0)); then
+  echo
+  echo "Completed with $errors error(s)."
+  exit 1
+fi
+
+echo
+echo "All done."
