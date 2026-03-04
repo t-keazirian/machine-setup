@@ -44,8 +44,12 @@ if command -v brew &>/dev/null; then
 else
   warn "Homebrew not found. Installing..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  # Add Homebrew to PATH for Apple Silicon
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  # Add Homebrew to PATH (path differs by architecture)
+  if [ "$(uname -m)" = "arm64" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
   ok "Homebrew installed"
   done_item "Homebrew"
 fi
@@ -68,12 +72,12 @@ if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
   warn "Installing packages from Brewfile..."
-  if brew bundle install --file="$DOTFILES_DIR/Brewfile" --no-lock; then
+  if brew bundle install --file="$DOTFILES_DIR/Brewfile"; then
     ok "Brew bundle complete"
     done_item "Homebrew packages installed"
   else
     warn "brew bundle had failures. Continuing."
-    manual_item "Rerun 'brew bundle install --file=$DOTFILES_DIR/Brewfile --no-lock' to retry"
+    manual_item "Rerun 'brew bundle install --file=$DOTFILES_DIR/Brewfile' to retry"
   fi
 fi
 
@@ -116,9 +120,16 @@ info "7/11  NVM + Node LTS"
 export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
 
-NVM_SH="/opt/homebrew/opt/nvm/nvm.sh"
-if [ ! -f "$NVM_SH" ]; then
-  NVM_SH="/opt/homebrew/opt/nvm/libexec/nvm.sh"
+if [ "$(uname -m)" = "arm64" ]; then
+  NVM_SH="/opt/homebrew/opt/nvm/nvm.sh"
+  NVM_SH_FALLBACK="/opt/homebrew/opt/nvm/libexec/nvm.sh"
+else
+  NVM_SH="/usr/local/opt/nvm/nvm.sh"
+  NVM_SH_FALLBACK="/usr/local/opt/nvm/libexec/nvm.sh"
+fi
+
+if [ ! -f "$NVM_SH" ] && [ -f "$NVM_SH_FALLBACK" ]; then
+  NVM_SH="$NVM_SH_FALLBACK"
 fi
 
 if [ -f "$NVM_SH" ]; then
@@ -135,7 +146,7 @@ if [ -f "$NVM_SH" ]; then
   fi
 else
   warn "NVM shell script not found at $NVM_SH. Is nvm installed via Homebrew?"
-  manual_item "Install Node: source /opt/homebrew/opt/nvm/nvm.sh && nvm install --lts && nvm alias default 'lts/*'"
+  manual_item "Install Node: source $NVM_SH && nvm install --lts && nvm alias default 'lts/*'"
 fi
 
 # ── 8. SDKMAN ─────────────────────────────────────────────────────────────────
