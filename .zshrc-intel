@@ -15,7 +15,7 @@ path=(/usr/local/sbin /usr/local/bin $path)
 path=(/usr/local/opt/vim/bin /usr/local/opt/python@3.13/bin $path)
 
 # Personal scripts
-path=("$HOME/bin" $path)
+path=("$HOME/Code/machine-setup/scripts" $path)
 
 # --- Completions BEFORE OMZ so compinit sees them ---
 fpath=(~/.zsh/completions $fpath)
@@ -87,7 +87,8 @@ plugins=(
   git
   zsh-autosuggestions
   colorize python pylint vundle
-  web-search history jsontools macos
+  web-search history jsontools macos sdk
+  zsh-kubectl-prompt mvn direnv
   zsh-syntax-highlighting
 )
 
@@ -100,26 +101,38 @@ COMPLETION_WAITING_DOTS="true"
 source "$ZSH/oh-my-zsh.sh"
 
 # =================
-# Java
+# SDKMAN
 # =================
-export JAVA_HOME="/usr/local/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
-path=("$JAVA_HOME/bin" $path)
-
-# =================
-# pnpm
-# =================
-export PNPM_HOME="/Users/taylorkeazirian/Library/pnpm"
-path=("$PNPM_HOME" $path)
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+[[ -n "$SDKMAN_CANDIDATES_DIR" ]] && export JAVA_HOME="$SDKMAN_CANDIDATES_DIR/java/current"
+export SDKMAN_AUTO_ENV=true
 
 # ===================
 # Aliases & utilities
 # ===================
+alias m='./mvnw'; compdef _mvn m
 alias openz="vim ~/.zshrc"
 alias openv="vim ~/.vimrc"
 alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 alias python='/usr/local/opt/python@3.13/bin/python3'
+alias brew-maint="$HOME/Code/machine-setup/scripts/brew-maintenance-simple.sh"
+alias brew-maint-complex="$HOME/Code/machine-setup/scripts/brew-maintenance.sh"
+
+# kubectl alias + completion
+alias k=kubectl
+if [[ $commands[kubectl] ]]; then
+  source <(kubectl completion zsh)
+  compdef k=kubectl
+fi
+
+# Prompt (kubectl context on the right)
+# RPROMPT='%{$fg_bold[magenta]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 
 # App/env
 export ERL_AFLAGS="-kernel shell_history enabled"
+export SPRING_MAIN_BANNER_MODE=off
+
+export PATH="$HOME/.local/bin:$PATH"
