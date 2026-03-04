@@ -25,6 +25,18 @@ Instead of copying dotfiles around, this setup uses symlinks:
 
 Edits to the dotfiles are automatically tracked by Git.
 
+## Git aliases
+
+Notable aliases defined in `.gitconfig`:
+
+- `git done` — after merging a PR, switches to main, pulls, and deletes all merged local branches in one command
+- `git clean-branches` — deletes local branches already merged into the default branch (safe: protects main/master/develop)
+- `git clean-branches-dry` — preview of what `clean-branches` would delete
+- `git clean-remote` — prunes stale remote-tracking branches (`git fetch --prune`)
+- `git lg` — compact graph log
+- `git st` — short status
+- `git wc` / `git wcd` — "what changed" log (summary / detailed)
+
 ## New machine setup (single command)
 
 SSH keys must exist and be registered with GitHub before running.
