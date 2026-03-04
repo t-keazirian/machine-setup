@@ -80,7 +80,7 @@ sdk install java
 4. Runs `brew bundle install --file=Brewfile --no-lock` — installs all formulae and casks; warns on VPN-only taps but does not exit
 5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
 6. Runs `bootstrap.sh` to create all dotfile symlinks
-7. Sources NVM from Homebrew, installs Node 22.14.0, and sets it as the default
+7. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
 8. Installs SDKMAN
 9. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
 10. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
