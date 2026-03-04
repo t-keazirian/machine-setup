@@ -4,3 +4,9 @@
 *.swo
 *.swn
 [._]*.un~
+
+# Homebrew
+Brewfile.lock.json
+
+# Script logs
+*.log
