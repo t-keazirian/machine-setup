@@ -13,4 +13,3 @@ Brewfile.lock.json
 
 # Session/local files
 CURRENT.md
-.claude/settings.local.json
