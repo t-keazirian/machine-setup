@@ -3,7 +3,6 @@ set -euo pipefail
 
 DOTFILES_DIR="$HOME/Code/machine-setup"
 DOTFILES_REPO="git@github.com:t-keazirian/machine-setup.git"
-NODE_VERSION="22.14.0"
 
 # ── Color helpers ──────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'
@@ -112,8 +111,8 @@ info "6/11  Dotfile symlinks"
 bash "$DOTFILES_DIR/bootstrap.sh"
 done_item "Dotfile symlinks created"
 
-# ── 7. NVM + Node ─────────────────────────────────────────────────────────────
-info "7/11  NVM + Node $NODE_VERSION"
+# ── 7. NVM + Node (LTS) ───────────────────────────────────────────────────────
+info "7/11  NVM + Node LTS"
 export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
 
@@ -125,18 +124,18 @@ fi
 if [ -f "$NVM_SH" ]; then
   # shellcheck source=/dev/null
   source "$NVM_SH"
-  if nvm ls "$NODE_VERSION" &>/dev/null; then
-    skip "Node $NODE_VERSION"
+  if nvm ls 'lts/*' &>/dev/null; then
+    skip "Node LTS"
   else
-    warn "Installing Node $NODE_VERSION via NVM..."
-    nvm install "$NODE_VERSION"
-    nvm alias default "$NODE_VERSION"
-    ok "Node $NODE_VERSION installed and set as default"
-    done_item "Node $NODE_VERSION (NVM)"
+    warn "Installing Node LTS via NVM..."
+    nvm install --lts
+    nvm alias default 'lts/*'
+    ok "Node LTS installed and set as default"
+    done_item "Node LTS (NVM)"
   fi
 else
   warn "NVM shell script not found at $NVM_SH. Is nvm installed via Homebrew?"
-  manual_item "Install Node: source /opt/homebrew/opt/nvm/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION"
+  manual_item "Install Node: source /opt/homebrew/opt/nvm/nvm.sh && nvm install --lts && nvm alias default 'lts/*'"
 fi
 
 # ── 8. SDKMAN ─────────────────────────────────────────────────────────────────
