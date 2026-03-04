@@ -82,3 +82,6 @@
  # Actual cleanup
     clean-remote = "!git fetch --prune origin"
 
+ # After merging a PR: switch to main, pull, delete merged local branches
+    done = "!git checkout main && git pull && git clean-branches"
+
