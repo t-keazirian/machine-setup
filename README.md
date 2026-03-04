@@ -10,7 +10,7 @@ This repo is the single source of truth for my shell, Vim, and Git configuration
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
 - `Brewfile` (all Homebrew formulae, casks, and VS Code extensions)
-- `scripts/` (utility scripts, symlinked to `~/Scripts`)
+- `scripts/` (utility scripts, on PATH via `~/.zshrc`)
 - `setup.sh` (master setup script for a new machine)
 
 ## How it works
@@ -21,7 +21,7 @@ Instead of copying dotfiles around, this setup uses symlinks:
 - `~/.vimrc` points to `~/Code/dotfiles/.vimrc`
 - `~/.gitconfig` points to `~/Code/dotfiles/.gitconfig`
 - `~/.gitignore-global` points to `~/Code/dotfiles/.gitignore-global`
-- `~/Scripts` points to `~/Code/dotfiles/scripts/`
+- `~/Code/dotfiles/scripts/` is added to `$PATH` directly in `.zshrc`
 
 Edits to the dotfiles are automatically tracked by Git.
 
@@ -49,7 +49,7 @@ bash ~/Code/dotfiles/setup.sh
 7. Sources NVM from Homebrew, installs Node 22.14.0, and sets it as the default
 8. Installs SDKMAN
 9. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
-10. Creates `~/Scripts` as a symlink to `~/Code/dotfiles/scripts/` (warns if a real `~/Scripts` directory already exists)
+10. Ensures all scripts in `~/Code/dotfiles/scripts/` are executable (they are on PATH via `.zshrc`)
 11. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
