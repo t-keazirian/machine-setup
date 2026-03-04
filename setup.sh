@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_DIR="$HOME/Code/dotfiles"
-DOTFILES_REPO="git@github.com:t-keazirian/dotfiles.git"
+DOTFILES_DIR="$HOME/Code/machine-setup"
+DOTFILES_REPO="git@github.com:t-keazirian/machine-setup.git"
 NODE_VERSION="22.14.0"
 
 # ── Color helpers ──────────────────────────────────────────────────────────────
