@@ -137,11 +137,6 @@ fi
 # RPROMPT='%{$fg_bold[magenta]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 
 # App/env
-export ERL_AFLAGS="-kernel shell_history enabled"
 export SPRING_MAIN_BANNER_MODE=off
 
 export PATH="$HOME/.local/bin:$PATH"
-
-# Added by Antigravity
-export PATH="/Users/taylorkeazirian/.antigravity/antigravity/bin:$PATH"
-. "/Users/taylorkeazirian/.deno/env"
