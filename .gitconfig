@@ -19,7 +19,7 @@
 
 [core]
   autocrlf = input
-	excludesfile = /Users/taylorkeazirian/.gitignore-global
+	excludesfile = ~/.gitignore-global
 
 [init]
 	defaultBranch = main
