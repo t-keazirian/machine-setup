@@ -129,6 +129,8 @@ if [[ $commands[kubectl] ]]; then
 fi
 
 # Prompt (kubectl context on the right)
+# Uncomment to show the current kubectl context/namespace in the right-side prompt.
+# Requires the zsh-kubectl-prompt plugin (already in plugins list above).
 # RPROMPT='%{$fg_bold[magenta]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 
 # App/env
