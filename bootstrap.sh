@@ -3,7 +3,7 @@
 # if any command exits with a non-zero status, stop the script immediately
 set -e
 
-DOTFILES_DIR="$HOME/Code/dotfiles"
+DOTFILES_DIR="$HOME/Code/machine-setup"
 TIMESTAMP="$(date '+%Y-%m-%d_%H-%M-%S')"
 
 echo "[$TIMESTAMP] Bootstrapping dotfiles from $DOTFILES_DIR"

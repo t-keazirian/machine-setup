@@ -1,6 +1,6 @@
-# Dotfiles
+# Machine Setup
 
-This repo is the single source of truth for my shell, Vim, and Git configuration.
+This repo is the single source of truth for my shell, Vim, Git configuration, scripts, and new machine automation.
 
 ## What's in here
 
@@ -17,11 +17,11 @@ This repo is the single source of truth for my shell, Vim, and Git configuration
 
 Instead of copying dotfiles around, this setup uses symlinks:
 
-- `~/.zshrc` points to `~/Code/dotfiles/.zshrc`
-- `~/.vimrc` points to `~/Code/dotfiles/.vimrc`
-- `~/.gitconfig` points to `~/Code/dotfiles/.gitconfig`
-- `~/.gitignore-global` points to `~/Code/dotfiles/.gitignore-global`
-- `~/Code/dotfiles/scripts/` is added to `$PATH` directly in `.zshrc`
+- `~/.zshrc` points to `~/Code/machine-setup/.zshrc`
+- `~/.vimrc` points to `~/Code/machine-setup/.vimrc`
+- `~/.gitconfig` points to `~/Code/machine-setup/.gitconfig`
+- `~/.gitignore-global` points to `~/Code/machine-setup/.gitignore-global`
+- `~/Code/machine-setup/scripts/` is added to `$PATH` directly in `.zshrc`
 
 Edits to the dotfiles are automatically tracked by Git.
 
@@ -42,18 +42,18 @@ cat ~/.ssh/id_ed25519.pub
 ### Step 1 — Run setup
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/dotfiles/main/setup.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/machine-setup/main/setup.sh)
 ```
 
 To review the script before running it:
 
 ```bash
 # Clone via HTTPS (no SSH keys required to review)
-git clone https://github.com/t-keazirian/dotfiles.git ~/Code/dotfiles
-cat ~/Code/dotfiles/setup.sh
+git clone https://github.com/t-keazirian/machine-setup.git ~/Code/machine-setup
+cat ~/Code/machine-setup/setup.sh
 
 # Then run it
-bash ~/Code/dotfiles/setup.sh
+bash ~/Code/machine-setup/setup.sh
 ```
 
 ### Step 2 — After setup completes
@@ -74,14 +74,14 @@ sdk install java
 
 1. Installs Xcode Command Line Tools (triggers dialog if missing, then waits)
 2. Installs Homebrew (Apple Silicon path: `/opt/homebrew`)
-3. Clones this repo to `~/Code/dotfiles` (skips if already present)
+3. Clones this repo to `~/Code/machine-setup` (skips if already present)
 4. Runs `brew bundle install --file=Brewfile --no-lock` — installs all formulae and casks; warns on VPN-only taps but does not exit
 5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
 6. Runs `bootstrap.sh` to create all dotfile symlinks
 7. Sources NVM from Homebrew, installs Node 22.14.0, and sets it as the default
 8. Installs SDKMAN
 9. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
-10. Ensures all scripts in `~/Code/dotfiles/scripts/` are executable (they are on PATH via `.zshrc`)
+10. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 11. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
@@ -105,7 +105,7 @@ Then add your work identity:
 **`tm/homebrew` + `tech-pass`** — these require VPN. After connecting, rerun:
 
 ```bash
-brew bundle install --file=~/Code/dotfiles/Brewfile --no-lock
+brew bundle install --file=~/Code/machine-setup/Brewfile --no-lock
 ```
 
 **macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
@@ -129,13 +129,13 @@ curl -fsSL https://deno.land/install.sh | sh
 If the repo is already cloned and you only need to recreate symlinks:
 
 ```bash
-cd ~/Code/dotfiles
+cd ~/Code/machine-setup
 chmod +x bootstrap.sh
 ./bootstrap.sh
 ```
 
 ### What bootstrap.sh does
-- Verifies the repo exists at `~/Code/dotfiles`
+- Verifies the repo exists at `~/Code/machine-setup`
 - Backs up any existing dotfiles (only if they are not symlinks):
   - `~/.zshrc` → `~/.zshrc.pre-bootstrap`
   - `~/.vimrc` → `~/.vimrc.pre-bootstrap`
