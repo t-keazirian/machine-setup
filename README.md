@@ -29,7 +29,7 @@ Edits to the dotfiles are automatically tracked by Git.
 
 ## New machine setup
 
-> **Requirements:** Apple Silicon Mac. SSH keys must exist and be registered with GitHub before running.
+> **Requirements:** Apple Silicon or Intel Mac. SSH keys must exist and be registered with GitHub before running.
 >
 > **Convention:** Repos live in `~/Code/`. The setup script creates `~/Code/` if it doesn't exist and clones this repo to `~/Code/machine-setup`.
 
@@ -121,6 +121,7 @@ chmod +x bootstrap.sh
   - `~/.vimrc` → `~/.vimrc.pre-bootstrap`
   - `~/.gitconfig` → `~/.gitconfig.pre-bootstrap`
   - `~/.gitignore-global` → `~/.gitignore-global.pre-bootstrap`
+- Detects architecture (Apple Silicon vs Intel) and symlinks the appropriate `.zshrc` to `~/.zshrc`
 - Creates symlinks in the home directory pointing to this repo's files
 - Configures Git to use `~/.gitignore-global` via `core.excludesfile`
 

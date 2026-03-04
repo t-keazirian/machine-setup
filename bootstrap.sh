@@ -42,7 +42,11 @@ link() {
   fi
 }
 
-link "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+if [ "$(uname -m)" = "arm64" ]; then
+  link "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+else
+  link "$DOTFILES_DIR/.zshrc-intel" "$HOME/.zshrc"
+fi
 link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 link "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.gitignore-global" "$HOME/.gitignore-global"
