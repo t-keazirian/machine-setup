@@ -2,7 +2,8 @@
 export PATH="/opt/homebrew/bin:$PATH"
 set -euo pipefail
 
-LOG_FILE=~/Scripts/brew-maintenance-simple.log
+LOG_FILE=~/.local/share/brew-maintenance/brew-maintenance-simple.log
+mkdir -p "$(dirname "$LOG_FILE")"
 
 echo "========================================" | tee -a "$LOG_FILE"
 echo " Homebrew maintenance started at $(date) " | tee -a "$LOG_FILE"
