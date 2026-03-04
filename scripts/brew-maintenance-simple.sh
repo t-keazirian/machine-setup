@@ -12,15 +12,15 @@ echo "========================================" | tee -a "$LOG_FILE"
 {
   echo
   echo "---- brew update ----"
-  brew update -v || echo "brew update failed. Continuing..." >&2
+  brew update -v
 
   echo
   echo "---- brew upgrade ----"
-  brew upgrade -v || echo "brew upgrade had failures. Continuing..."
+  brew upgrade -v
 
   echo
   echo "---- brew upgrade --cask ----"
-  brew upgrade --cask -v || echo "brew upgrade --cask had failures. Continuing..."
+  brew upgrade --cask -v
 
   echo
   echo "---- brew doctor ----"

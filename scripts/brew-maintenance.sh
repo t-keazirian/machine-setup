@@ -33,20 +33,12 @@ fi
 
 echo "Starting Homebrew maintenance at $(date)..." | tee -a $LOG_FILE
 
-# Check VPN connection (currently commented out)
-# VPN_NAME="your-vpn-name"  # Replace with your actual VPN name
-# if ! /usr/sbin/scutil --nc status "$VPN_NAME" | grep -q "Connected"; then
-#     echo "VPN is not connected. Skipping VPN-dependent updates." | tee -a $LOG_FILE
-# else
-#     echo "VPN is connected. Proceeding with Homebrew updates." | tee -a $LOG_FILE
-
-    {
-        echo "============================="
-        echo "Running: brew update -v"
-        brew update -v
-        echo "============================="
-    } | tee -a $LOG_FILE
-# fi
+{
+    echo "============================="
+    echo "Running: brew update -v"
+    brew update -v
+    echo "============================="
+} | tee -a $LOG_FILE
 
 {
     echo "============================="
