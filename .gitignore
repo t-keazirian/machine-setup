@@ -10,3 +10,6 @@ Brewfile.lock.json
 
 # Script logs
 *.log
+
+# Session/local files
+CURRENT.md
