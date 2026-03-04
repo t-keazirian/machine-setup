@@ -121,6 +121,17 @@ alias python='/usr/local/opt/python@3.13/bin/python3'
 alias brew-maint="$HOME/Code/machine-setup/scripts/brew-maintenance-simple.sh"
 alias brew-maint-complex="$HOME/Code/machine-setup/scripts/brew-maintenance.sh"
 
+# brewi: install a Homebrew package and immediately regenerate the Brewfile.
+# Usage: brewi <package> [package2 ...]
+# - Passes all arguments to `brew install` (handles multiple packages at once)
+# - Only regenerates the Brewfile if the install succeeds
+# - `brew bundle dump --force` rewrites the entire Brewfile from all currently
+#   installed packages — not just what you installed now. Review the diff before
+#   committing to avoid permanently tracking packages you installed by accident.
+brewi() {
+  brew install "$@" && brew bundle dump --file="$HOME/Code/machine-setup/Brewfile" --force
+}
+
 # kubectl alias + completion
 alias k=kubectl
 if [[ $commands[kubectl] ]]; then

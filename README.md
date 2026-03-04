@@ -152,6 +152,35 @@ mv ~/.gitignore-global.pre-bootstrap ~/.gitignore-global
 
 ---
 
+## Keeping the Brewfile up to date
+
+The Brewfile is a snapshot of every Homebrew package, cask, and VS Code extension to install on a new machine. It does not update itself automatically when you install something new.
+
+Use `brewi` instead of `brew install` to install a package and update the Brewfile in one step:
+
+```bash
+brewi <package>
+brewi git gh tree   # multiple packages at once
+```
+
+**What `brewi` does, precisely:**
+1. Runs `brew install` with every argument you pass (multiple packages work correctly)
+2. If and only if the install succeeds, runs `brew bundle dump --file=~/Code/machine-setup/Brewfile --force`
+3. `brew bundle dump --force` **rewrites the entire Brewfile** from scratch based on everything currently installed — not just the package you just added
+
+**Important:** because the dump is a full snapshot, packages you installed casually in the past may appear in the diff. Review `git diff Brewfile` before committing and remove anything you don't want permanently tracked.
+
+**After running `brewi`, commit the updated Brewfile:**
+
+```bash
+cd ~/Code/machine-setup
+git add Brewfile
+git commit -m "chore: add <package> to Brewfile"
+git push
+```
+
+---
+
 ## Git aliases
 
 Notable aliases defined in `.gitconfig`:
