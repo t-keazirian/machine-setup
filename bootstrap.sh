@@ -47,9 +47,5 @@ link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 link "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.gitignore-global" "$HOME/.gitignore-global"
 
-# --- configure git ---
-echo "Configuring git global excludes file"
-git config --global core.excludesfile "$HOME/.gitignore-global"
-
 echo "[$TIMESTAMP] Bootstrap complete."
 echo "[$TIMESTAMP] Restart your terminal or run: source ~/.zshrc"
