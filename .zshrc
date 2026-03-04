@@ -15,7 +15,7 @@ path=(/opt/homebrew/sbin /opt/homebrew/bin $path)
 path=(/opt/homebrew/opt/vim/bin /opt/homebrew/opt/python@3.13/bin $path)
 
 # Personal scripts
-path=("$HOME/Scripts" $path)
+path=("$HOME/Code/dotfiles/scripts" $path)
 
 # MySQL client
 path=(/opt/homebrew/opt/mysql@8.0/bin $path)
@@ -123,8 +123,8 @@ alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 alias python='/opt/homebrew/opt/python@3.13/bin/python3'
-alias brew-maint="~/Scripts/brew-maintenance-simple.sh"
-alias brew-maint-complex="~/Scripts/brew-maintenance.sh"
+alias brew-maint="$HOME/Code/dotfiles/scripts/brew-maintenance-simple.sh"
+alias brew-maint-complex="$HOME/Code/dotfiles/scripts/brew-maintenance.sh"
 
 kafkactx() {/Users/taylorkeazirian/Code/TicketMaster/kafkactx/kafkactx.sh "$@"; }
 

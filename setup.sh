@@ -183,33 +183,15 @@ else
   manual_item "Open vim and run :PluginInstall after SSH keys are configured"
 fi
 
-# ── 10. ~/Scripts symlink ──────────────────────────────────────────────────────
-info "10/11 ~/Scripts symlink"
-SCRIPTS_TARGET="$HOME/Scripts"
+# ── 10. scripts/ permissions ──────────────────────────────────────────────────
+info "10/11 scripts/ permissions"
 SCRIPTS_SRC="$DOTFILES_DIR/scripts"
-
-if [ -L "$SCRIPTS_TARGET" ]; then
-  current_link="$(readlink "$SCRIPTS_TARGET")"
-  if [ "$current_link" = "$SCRIPTS_SRC" ]; then
-    skip "~/Scripts symlink"
-  else
-    warn "~/Scripts is a symlink but points to $current_link, not $SCRIPTS_SRC."
-    manual_item "Fix ~/Scripts symlink: rm ~/Scripts && ln -s $SCRIPTS_SRC ~/Scripts"
-  fi
-elif [ -d "$SCRIPTS_TARGET" ]; then
-  warn "~/Scripts is a real directory. To convert it to a symlink, run manually:"
-  warn "  mv ~/Scripts ~/Scripts.bak && ln -s $SCRIPTS_SRC ~/Scripts"
-  manual_item "Convert ~/Scripts to symlink: mv ~/Scripts ~/Scripts.bak && ln -s $SCRIPTS_SRC ~/Scripts"
-else
-  ln -s "$SCRIPTS_SRC" "$SCRIPTS_TARGET"
-  ok "~/Scripts symlinked to $SCRIPTS_SRC"
-  done_item "~/Scripts symlink"
-fi
 
 chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
          "$SCRIPTS_SRC"/brew-maintenance-simple.sh \
          "$SCRIPTS_SRC"/git-pull-all \
          "$SCRIPTS_SRC"/who-is-listening
+ok "scripts/ is executable (on PATH via .zshrc)"
 
 # ── 11. ~/.zsh/completions (maven-bash-completion) ────────────────────────────
 info "11/11 zsh completions"
