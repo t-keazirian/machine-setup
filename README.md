@@ -25,29 +25,49 @@ Instead of copying dotfiles around, this setup uses symlinks:
 
 Edits to the dotfiles are automatically tracked by Git.
 
-## Git aliases
+---
 
-Notable aliases defined in `.gitconfig`:
+## New machine setup
 
-- `git done` — after merging a PR, switches to main, pulls, and deletes all merged local branches in one command
-- `git clean-branches` — deletes local branches already merged into the default branch (safe: protects main/master/develop)
-- `git clean-branches-dry` — preview of what `clean-branches` would delete
-- `git clean-remote` — prunes stale remote-tracking branches (`git fetch --prune`)
-- `git lg` — compact graph log
-- `git st` — short status
-- `git wc` / `git wcd` — "what changed" log (summary / detailed)
+> **Requirements:** Apple Silicon Mac. SSH keys must exist and be registered with GitHub before running.
 
-## New machine setup (single command)
-
-SSH keys must exist and be registered with GitHub before running.
+### Step 0 — Generate SSH keys (if needed)
 
 ```bash
-# If SSH keys are already on the machine:
-bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/dotfiles/main/setup.sh)
+ssh-keygen -t ed25519 -C "your@email.com"
+cat ~/.ssh/id_ed25519.pub
+# Copy the output and add it to https://github.com/settings/keys
+```
 
-# Or clone first and review:
-git clone git@github.com:t-keazirian/dotfiles.git ~/Code/dotfiles
+### Step 1 — Run setup
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/dotfiles/main/setup.sh)
+```
+
+To review the script before running it:
+
+```bash
+# Clone via HTTPS (no SSH keys required to review)
+git clone https://github.com/t-keazirian/dotfiles.git ~/Code/dotfiles
+cat ~/Code/dotfiles/setup.sh
+
+# Then run it
 bash ~/Code/dotfiles/setup.sh
+```
+
+### Step 2 — After setup completes
+
+Restart your terminal, or run:
+
+```bash
+source ~/.zshrc
+```
+
+Then open a new terminal and install a Java version via SDKMAN:
+
+```bash
+sdk install java
 ```
 
 ### What setup.sh does
@@ -68,25 +88,18 @@ Each step prints "already done, skipping" if it detects it has been run before. 
 
 ### What cannot be automated
 
-**SSH keys** — generate and register with GitHub before running setup:
+**`~/.gitconfig-tm`** — work identity, never committed to this repo. The `.gitconfig` uses `includeIf` to pick it up automatically once the file exists. Create it manually:
 
 ```bash
-ssh-keygen -t ed25519 -C "your@email.com"
-# Then add ~/.ssh/id_ed25519.pub to https://github.com/settings/keys
+touch ~/.gitconfig-tm
 ```
 
-**`~/.gitconfig-tm`** — work identity, never committed to this repo. The `.gitconfig` uses `includeIf` to pick it up automatically once the file exists on the machine:
+Then add your work identity:
 
 ```ini
 [user]
   name = Your Work Name
   email = you@work.com
-```
-
-**SDKMAN Java version** — `setup.sh` installs SDKMAN but cannot install Java inside the same shell session. After setup completes, open a new terminal and run:
-
-```bash
-sdk install java
 ```
 
 **`tm/homebrew` + `tech-pass`** — these require VPN. After connecting, rerun:
@@ -155,3 +168,17 @@ mv ~/.gitignore-global.pre-bootstrap ~/.gitignore-global
 #### Notes
 - Symlinks are machine-specific and must be created on each machine.
 - Moving the repo requires recreating symlinks (they store the path).
+
+---
+
+## Git aliases
+
+Notable aliases defined in `.gitconfig`:
+
+- `git done` — after merging a PR, switches to main, pulls, and deletes all merged local branches in one command
+- `git clean-branches` — deletes local branches already merged into the default branch (safe: protects main/master/develop)
+- `git clean-branches-dry` — preview of what `clean-branches` would delete
+- `git clean-remote` — prunes stale remote-tracking branches (`git fetch --prune`)
+- `git lg` — compact graph log
+- `git st` — short status
+- `git wc` / `git wcd` — "what changed" log (summary / detailed)
