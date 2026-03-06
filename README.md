@@ -6,7 +6,7 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 - `.zshrc` (symlinked to `~/.zshrc`)
 - `.vimrc` (symlinked to `~/.vimrc`)
-- `.gitconfig` (symlinked to `~/.gitconfig`) — **update `[user]` with your own name and email before use**
+- `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
 - `Brewfile` (all Homebrew formulae, casks, and VS Code extensions)
@@ -129,6 +129,12 @@ cd ~/Code/machine-setup
 chmod +x bootstrap.sh
 ./bootstrap.sh
 ```
+
+> **Note:** `bootstrap.sh` does not set your Git identity. If you're running it standalone (not via `setup.sh`), update `.gitconfig` manually afterward:
+> ```bash
+> git config --global user.name  "Your Name"
+> git config --global user.email "you@example.com"
+> ```
 
 ### What bootstrap.sh does
 - Verifies the repo exists at `~/Code/machine-setup`
