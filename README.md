@@ -6,7 +6,7 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 - `.zshrc` (symlinked to `~/.zshrc`)
 - `.vimrc` (symlinked to `~/.vimrc`)
-- `.gitconfig` (symlinked to `~/.gitconfig`)
+- `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
 - `Brewfile` (all Homebrew formulae, casks, and VS Code extensions)
@@ -24,6 +24,21 @@ Instead of copying dotfiles around, this setup uses symlinks:
 - `~/Code/machine-setup/scripts/` is added to `$PATH` directly in `.zshrc`
 
 Edits to the dotfiles are automatically tracked by Git.
+
+---
+
+## Which script do I need?
+
+| Situation | Script |
+|---|---|
+| Brand new machine — nothing installed yet | `setup.sh` |
+| Repo already cloned, just need symlinks recreated | `bootstrap.sh` |
+
+**`setup.sh`** is the full setup. It installs Homebrew, Oh My Zsh, NVM, SDKMAN, Vim plugins, and more — then calls `bootstrap.sh` as one of its steps.
+
+**`bootstrap.sh`** only creates dotfile symlinks. It's a subset of `setup.sh`, useful when the repo is already in place and you just need to wire things up (e.g. after cloning on a machine you use occasionally, or after moving the repo).
+
+If in doubt, run `setup.sh`. It skips anything already done.
 
 ---
 
@@ -80,11 +95,12 @@ sdk install java
 4. Runs `brew bundle install --file=Brewfile` — installs all formulae and casks; warns on failures but does not exit
 5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
 6. Runs `bootstrap.sh` to create all dotfile symlinks
-7. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
-8. Installs SDKMAN
-9. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
-10. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
-11. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
+7. Prompts for your Git name and email and writes them to `~/.gitconfig` (skips if already set)
+8. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
+9. Installs SDKMAN
+10. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
+11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
+12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
 
@@ -113,6 +129,12 @@ cd ~/Code/machine-setup
 chmod +x bootstrap.sh
 ./bootstrap.sh
 ```
+
+> **Note:** `bootstrap.sh` does not set your Git identity. If you're running it standalone (not via `setup.sh`), update `.gitconfig` manually afterward:
+> ```bash
+> git config --global user.name  "Your Name"
+> git config --global user.email "you@example.com"
+> ```
 
 ### What bootstrap.sh does
 - Verifies the repo exists at `~/Code/machine-setup`

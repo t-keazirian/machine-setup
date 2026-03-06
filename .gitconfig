@@ -1,6 +1,7 @@
 [user]
-  name  = Taylor Keazirian
-  email = taylork26@gmail.com
+  # Fill in your own name and email — see README for instructions.
+  name  = Your Name
+  email = you@example.com
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
