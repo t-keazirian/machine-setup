@@ -27,6 +27,21 @@ Edits to the dotfiles are automatically tracked by Git.
 
 ---
 
+## Which script do I need?
+
+| Situation | Script |
+|---|---|
+| Brand new machine — nothing installed yet | `setup.sh` |
+| Repo already cloned, just need symlinks recreated | `bootstrap.sh` |
+
+**`setup.sh`** is the full setup. It installs Homebrew, Oh My Zsh, NVM, SDKMAN, Vim plugins, and more — then calls `bootstrap.sh` as one of its steps.
+
+**`bootstrap.sh`** only creates dotfile symlinks. It's a subset of `setup.sh`, useful when the repo is already in place and you just need to wire things up (e.g. after cloning on a machine you use occasionally, or after moving the repo).
+
+If in doubt, run `setup.sh`. It skips anything already done.
+
+---
+
 ## New machine setup
 
 > **Requirements:** Apple Silicon or Intel Mac. SSH keys must exist and be registered with GitHub before running.
