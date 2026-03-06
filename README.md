@@ -6,7 +6,7 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 - `.zshrc` (symlinked to `~/.zshrc`)
 - `.vimrc` (symlinked to `~/.vimrc`)
-- `.gitconfig` (symlinked to `~/.gitconfig`)
+- `.gitconfig` (symlinked to `~/.gitconfig`) — **update `[user]` with your own name and email before use**
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
 - `Brewfile` (all Homebrew formulae, casks, and VS Code extensions)
@@ -33,7 +33,17 @@ Edits to the dotfiles are automatically tracked by Git.
 >
 > **Convention:** Repos live in `~/Code/`. The setup script creates `~/Code/` if it doesn't exist and clones this repo to `~/Code/machine-setup`.
 
-### Step 0 — Generate SSH keys (if needed)
+### Step 0 — Update `.gitconfig` with your identity
+
+Open `.gitconfig` and replace the placeholder `[user]` block with your own details:
+
+```gitconfig
+[user]
+  name  = Your Name
+  email = you@example.com
+```
+
+### Step 1 — Generate SSH keys (if needed)
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
