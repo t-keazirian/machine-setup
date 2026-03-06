@@ -33,17 +33,7 @@ Edits to the dotfiles are automatically tracked by Git.
 >
 > **Convention:** Repos live in `~/Code/`. The setup script creates `~/Code/` if it doesn't exist and clones this repo to `~/Code/machine-setup`.
 
-### Step 0 — Update `.gitconfig` with your identity
-
-Open `.gitconfig` and replace the placeholder `[user]` block with your own details:
-
-```gitconfig
-[user]
-  name  = Your Name
-  email = you@example.com
-```
-
-### Step 1 — Generate SSH keys (if needed)
+### Step 0 — Generate SSH keys (if needed)
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
@@ -90,11 +80,12 @@ sdk install java
 4. Runs `brew bundle install --file=Brewfile` — installs all formulae and casks; warns on failures but does not exit
 5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
 6. Runs `bootstrap.sh` to create all dotfile symlinks
-7. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
-8. Installs SDKMAN
-9. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
-10. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
-11. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
+7. Prompts for your Git name and email and writes them to `~/.gitconfig` (skips if already set)
+8. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
+9. Installs SDKMAN
+10. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
+11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
+12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
 

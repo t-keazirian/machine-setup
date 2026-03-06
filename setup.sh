@@ -23,7 +23,7 @@ done_item()   { DONE+=("$*"); }
 manual_item() { MANUAL+=("$*"); }
 
 # ── 1. Xcode Command Line Tools ────────────────────────────────────────────────
-info "1/11  Xcode Command Line Tools"
+info "1/12  Xcode Command Line Tools"
 if xcode-select -p &>/dev/null; then
   skip "Xcode CLT"
 else
@@ -38,7 +38,7 @@ else
 fi
 
 # ── 2. Homebrew ────────────────────────────────────────────────────────────────
-info "2/11  Homebrew"
+info "2/12  Homebrew"
 if command -v brew &>/dev/null; then
   skip "Homebrew"
 else
@@ -55,7 +55,7 @@ else
 fi
 
 # ── 3. Clone dotfiles ──────────────────────────────────────────────────────────
-info "3/11  Dotfiles repo"
+info "3/12  Dotfiles repo"
 if [ -d "$DOTFILES_DIR/.git" ]; then
   skip "Dotfiles repo at $DOTFILES_DIR"
 else
@@ -67,7 +67,7 @@ else
 fi
 
 # ── 4. Homebrew bundle ─────────────────────────────────────────────────────────
-info "4/11  Homebrew bundle"
+info "4/12  Homebrew bundle"
 if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
@@ -82,7 +82,7 @@ else
 fi
 
 # ── 5. Oh My Zsh ──────────────────────────────────────────────────────────────
-info "5/11  Oh My Zsh"
+info "5/12  Oh My Zsh"
 if [ -d "$HOME/.oh-my-zsh" ]; then
   skip "Oh My Zsh"
 else
@@ -111,12 +111,30 @@ else
 fi
 
 # ── 6. Dotfile symlinks (bootstrap.sh) ────────────────────────────────────────
-info "6/11  Dotfile symlinks"
+info "6/12  Dotfile symlinks"
 bash "$DOTFILES_DIR/bootstrap.sh"
 done_item "Dotfile symlinks created"
 
-# ── 7. NVM + Node (LTS) ───────────────────────────────────────────────────────
-info "7/11  NVM + Node LTS"
+# ── 7. Git identity ───────────────────────────────────────────────────────────
+info "7/12  Git identity"
+GIT_NAME="$(git config --global user.name 2>/dev/null || true)"
+GIT_EMAIL="$(git config --global user.email 2>/dev/null || true)"
+
+if [[ "$GIT_NAME" == "Your Name" || -z "$GIT_NAME" || "$GIT_EMAIL" == "you@example.com" || -z "$GIT_EMAIL" ]]; then
+  warn "Git identity is not set. Enter your details (written to ~/.gitconfig via symlink)."
+  read -rp "  Full name:  " input_name
+  read -rp "  Email:      " input_email
+  git config --global user.name  "$input_name"
+  git config --global user.email "$input_email"
+  ok "Git identity set: $input_name <$input_email>"
+  warn "Note: ~/.gitconfig is symlinked to this repo. If you commit, your name/email will be in the diff — review before pushing."
+  done_item "Git identity configured"
+else
+  skip "Git identity ($GIT_NAME <$GIT_EMAIL>)"
+fi
+
+# ── 8. NVM + Node (LTS) ───────────────────────────────────────────────────────
+info "8/12  NVM + Node LTS"
 export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
 
@@ -150,7 +168,7 @@ else
 fi
 
 # ── 8. SDKMAN ─────────────────────────────────────────────────────────────────
-info "8/11  SDKMAN"
+info "9/12  SDKMAN"
 if [ -d "$HOME/.sdkman" ]; then
   skip "SDKMAN"
 else
@@ -162,7 +180,7 @@ fi
 manual_item "Open a new terminal and run: sdk install java"
 
 # ── 9. Vundle + Vim plugins ────────────────────────────────────────────────────
-info "9/11  Vundle + Vim plugins"
+info "10/12 Vundle + Vim plugins"
 VUNDLE_DIR="$HOME/.vim/bundle/Vundle.vim"
 if [ -d "$VUNDLE_DIR" ]; then
   skip "Vundle"
@@ -194,7 +212,7 @@ else
 fi
 
 # ── 10. scripts/ permissions ──────────────────────────────────────────────────
-info "10/11 scripts/ permissions"
+info "11/12 scripts/ permissions"
 SCRIPTS_SRC="$DOTFILES_DIR/scripts"
 
 chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
@@ -204,7 +222,7 @@ chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
 ok "scripts/ is executable (on PATH via .zshrc)"
 
 # ── 11. ~/.zsh/completions (maven-bash-completion) ────────────────────────────
-info "11/11 zsh completions"
+info "12/12 zsh completions"
 ZSH_COMPLETIONS_DIR="$HOME/.zsh/completions"
 mkdir -p "$ZSH_COMPLETIONS_DIR"
 
