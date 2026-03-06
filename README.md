@@ -112,12 +112,6 @@ Each step prints "already done, skipping" if it detects it has been run before. 
 
 **iTerm2 profile** — export your `.itermcolors` theme and JSON profile from iTerm2 > Preferences > Profiles > Export. Optionally add these to the repo later.
 
-**Deno** — install separately:
-
-```bash
-curl -fsSL https://deno.land/install.sh | sh
-```
-
 ---
 
 ## Bootstrap existing dotfiles (symlinks only)
