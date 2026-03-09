@@ -126,6 +126,10 @@ alias python='/opt/homebrew/opt/python@3.13/bin/python3'
 alias brew-maint="$HOME/Code/machine-setup/scripts/brew-maintenance-simple.sh"
 alias brew-maint-complex="$HOME/Code/machine-setup/scripts/brew-maintenance.sh"
 
+# Claude Code multi-account
+alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
+alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
+
 # brewi: install a Homebrew package and immediately regenerate the Brewfile.
 # Usage: brewi <package> [package2 ...]
 # - Passes all arguments to `brew install` (handles multiple packages at once)
@@ -153,3 +157,6 @@ fi
 export SPRING_MAIN_BANNER_MODE=off
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Machine-local secrets (not tracked by git)
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
