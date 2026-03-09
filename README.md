@@ -238,7 +238,7 @@ The script installs plugins into both the personal (`~/.claude`) and work (`~/.c
 ### Adding a new plugin
 
 1. Install it in your personal context as normal.
-2. Sync it to work:
+2. Sync it to work (use the full path — script is not on `$PATH`):
    ```bash
    bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
    ```
@@ -250,6 +250,8 @@ The script installs plugins into both the personal (`~/.claude`) and work (`~/.c
 Add its plugin ID to the `PERSONAL_ONLY` array in `scripts/install-claude-plugins.sh`. The work sync will skip it automatically.
 
 ### Running the script manually
+
+Run using the full path — the script is not on `$PATH`:
 
 ```bash
 # Both contexts (default)
