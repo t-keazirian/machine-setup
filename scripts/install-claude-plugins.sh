@@ -94,7 +94,7 @@ if [[ "$CONTEXT" == "personal" || "$CONTEXT" == "both" ]]; then
   for plugin in "${PERSONAL_PLUGINS[@]}"; do
     warn "Installing: $plugin"
     CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin install "$plugin"
-    CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin enable "$plugin"
+    CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin enable "$plugin" || true
     ok "$plugin"
   done
 
@@ -131,7 +131,7 @@ if [[ "$CONTEXT" == "work" || "$CONTEXT" == "both" ]]; then
 
     warn "Installing: $plugin"
     CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin install "$plugin"
-    CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin enable "$plugin"
+    CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin enable "$plugin" || true
     ok "$plugin"
   done
 
