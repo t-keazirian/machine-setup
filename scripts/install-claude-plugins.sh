@@ -83,12 +83,12 @@ if [[ "$CONTEXT" == "personal" || "$CONTEXT" == "both" ]]; then
   info "Personal context ($PERSONAL_DIR)"
 
   # claude-plugins-official is registered by default; only add additional marketplaces.
-  warn "Adding marketplace: cc-marketplace"
-  CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add cc-marketplace kenryu42/cc-marketplace
+  warn "Adding marketplace: kenryu42/cc-marketplace"
+  CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add kenryu42/cc-marketplace
   ok "Marketplace: cc-marketplace"
 
-  warn "Adding marketplace: craft"
-  CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add craft agentpatterns/craft
+  warn "Adding marketplace: agentpatterns/craft"
+  CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add agentpatterns/craft
   ok "Marketplace: craft"
 
   for plugin in "${PERSONAL_PLUGINS[@]}"; do
@@ -111,8 +111,8 @@ if [[ "$CONTEXT" == "work" || "$CONTEXT" == "both" ]]; then
     exit 1
   fi
 
-  warn "Adding marketplace: craft"
-  CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin marketplace add craft agentpatterns/craft
+  warn "Adding marketplace: agentpatterns/craft"
+  CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin marketplace add agentpatterns/craft
   ok "Marketplace: craft"
 
   # Derive work plugin list from personal registry, excluding PERSONAL_ONLY.
