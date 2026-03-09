@@ -10,6 +10,8 @@ set -euo pipefail
 #   minus anything in PERSONAL_ONLY. Adding a plugin to personal and re-running
 #   syncs it to work with no script edits required.
 #
+# All marketplaces are registered explicitly — do not rely on defaults.
+#
 # Usage:
 #   bash scripts/install-claude-plugins.sh [--context personal|work|both]
 #
@@ -82,7 +84,10 @@ PERSONAL_ONLY=(
 if [[ "$CONTEXT" == "personal" || "$CONTEXT" == "both" ]]; then
   info "Personal context ($PERSONAL_DIR)"
 
-  # claude-plugins-official is registered by default; only add additional marketplaces.
+  warn "Adding marketplace: anthropics/claude-plugins-official"
+  CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add anthropics/claude-plugins-official
+  ok "Marketplace: claude-plugins-official"
+
   warn "Adding marketplace: kenryu42/cc-marketplace"
   CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin marketplace add kenryu42/cc-marketplace
   ok "Marketplace: cc-marketplace"
@@ -109,6 +114,10 @@ if [[ "$CONTEXT" == "work" || "$CONTEXT" == "both" ]]; then
     echo "Run with --context personal first, or install personal plugins before work." >&2
     exit 1
   fi
+
+  warn "Adding marketplace: anthropics/claude-plugins-official"
+  CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin marketplace add anthropics/claude-plugins-official
+  ok "Marketplace: claude-plugins-official"
 
   warn "Adding marketplace: agentpatterns/craft"
   CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin marketplace add agentpatterns/craft
