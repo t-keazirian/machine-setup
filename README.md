@@ -103,6 +103,8 @@ sdk install java
 10. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
 11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
+13. Installs Claude Code (skips if already present)
+14. Runs `scripts/install-claude-plugins.sh` to install and enable all plugins in both personal and work contexts (skips if Claude is not installed)
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
 
@@ -224,6 +226,41 @@ alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
 ```
 
 `claude` (bare) continues to use `~/.claude` (personal). Run `claude-work` once on a new machine to trigger the auth flow for the work account — it's a one-time step per machine.
+
+---
+
+## Claude plugins
+
+Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` runs this automatically as its final step.
+
+The script installs plugins into both the personal (`~/.claude`) and work (`~/.claude-work`) contexts. The personal list is the hardcoded source of truth; the work list is derived automatically from whatever is installed in the personal context (minus anything in `PERSONAL_ONLY`).
+
+### Adding a new plugin
+
+1. Install it in your personal context as normal.
+2. Sync it to work:
+   ```bash
+   bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
+   ```
+3. Update `PERSONAL_PLUGINS` in `scripts/install-claude-plugins.sh` so the plugin is included on fresh machine setups.
+4. If the plugin comes from a **new marketplace** (not `claude-plugins-official` or `craft`), also add a `claude plugin marketplace add` line to the personal section — and, if it should sync to work, to the work section as well.
+
+### Keeping a plugin personal-only
+
+Add its plugin ID to the `PERSONAL_ONLY` array in `scripts/install-claude-plugins.sh`. The work sync will skip it automatically.
+
+### Running the script manually
+
+```bash
+# Both contexts (default)
+bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
+
+# One context only
+bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context personal
+bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
+```
+
+The script is idempotent — safe to re-run on an already-configured machine.
 
 ---
 

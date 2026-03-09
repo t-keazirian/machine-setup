@@ -241,7 +241,7 @@ else
 fi
 
 # ── 12. Claude Code ───────────────────────────────────────────────────────────
-info "13/13 Claude Code"
+info "13/14 Claude Code"
 if command -v claude &>/dev/null; then
   skip "Claude Code"
 else
@@ -255,6 +255,17 @@ else
   fi
 fi
 manual_item "Authenticate Claude Code: run 'claude' and log in"
+
+# ── 13. Claude Plugins ────────────────────────────────────────────────────────
+info "14/14 Claude Plugins"
+if command -v claude &>/dev/null; then
+  bash "$DOTFILES_DIR/scripts/install-claude-plugins.sh"
+  ok "Claude plugins installed"
+  done_item "Claude plugins"
+else
+  warn "Claude not installed; skipping plugin install."
+  manual_item "Install plugins later: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
+fi
 
 # ── Summary ────────────────────────────────────────────────────────────────────
 echo ""
