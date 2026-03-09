@@ -6,7 +6,12 @@
       "Bash(git pull:*)",
       "Bash(git:*)",
       "Skill(commit-commands:commit-push-pr)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(python3:*)",
+      "Bash(claude plugin:*)",
+      "Bash(CLAUDE_CONFIG_DIR=/Users/taylorkeazirian/.claude-work claude plugin:*)",
+      "Bash(chmod +x:*)",
+      "Bash(bash:*)"
     ]
   }
 }
