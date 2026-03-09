@@ -5,6 +5,7 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 ## What's in here
 
 - `.zshrc` (symlinked to `~/.zshrc`)
+- `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked by this repo** (create manually on each machine)
 - `.vimrc` (symlinked to `~/.vimrc`)
 - `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
@@ -208,3 +209,35 @@ Notable aliases defined in `.gitconfig`:
 - `git lg` — compact graph log
 - `git st` — short status
 - `git wc` / `git wcd` — "what changed" log (summary / detailed)
+
+---
+
+## Claude Code multi-account
+
+Two aliases in `.zshrc` allow separate personal and work Claude Code sessions. Each points to its own config directory, giving independent auth, history, and usage limits:
+
+```zsh
+alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
+alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
+```
+
+`claude` (bare) continues to use `~/.claude` (personal). Run `claude-work` once on a new machine to trigger the auth flow for the work account — it's a one-time step per machine.
+
+---
+
+## Machine-local secrets and overrides
+
+`.zshrc` sources `~/.zshrc.local` at startup if the file exists:
+
+```zsh
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+```
+
+This file is not in the repo. Create it manually on each machine and put any secrets or local-only config there:
+
+```zsh
+export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_...
+export SOME_OTHER_SECRET=...
+```
+
+**Never put tokens or credentials directly in `.zshrc`** — it is tracked by Git.
