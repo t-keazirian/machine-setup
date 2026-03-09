@@ -240,6 +240,22 @@ else
   fi
 fi
 
+# ── 12. Claude Code ───────────────────────────────────────────────────────────
+info "13/13 Claude Code"
+if command -v claude &>/dev/null; then
+  skip "Claude Code"
+else
+  warn "Installing Claude Code..."
+  if curl -fsSL https://claude.ai/install.sh | bash; then
+    ok "Claude Code installed"
+    done_item "Claude Code"
+  else
+    warn "Claude Code install failed."
+    manual_item "Install Claude Code: curl -fsSL https://claude.ai/install.sh | bash"
+  fi
+fi
+manual_item "Authenticate Claude Code: run 'claude' and log in"
+
 # ── Summary ────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${RESET}"

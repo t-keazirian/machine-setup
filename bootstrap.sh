@@ -46,6 +46,8 @@ fi
 link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 link "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.gitignore-global" "$HOME/.gitignore-global"
+mkdir -p "$HOME/.claude"
+link "$DOTFILES_DIR/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 
 echo "[$TIMESTAMP] Bootstrap complete."
 echo "[$TIMESTAMP] Restart your terminal or run: source ~/.zshrc"
