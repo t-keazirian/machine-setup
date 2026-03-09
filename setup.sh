@@ -254,18 +254,13 @@ else
     manual_item "Install Claude Code: curl -fsSL https://claude.ai/install.sh | bash"
   fi
 fi
-manual_item "Authenticate Claude Code: run 'claude' and log in"
 
 # ── 13. Claude Plugins ────────────────────────────────────────────────────────
 info "14/14 Claude Plugins"
-if command -v claude &>/dev/null; then
-  bash "$DOTFILES_DIR/scripts/install-claude-plugins.sh"
-  ok "Claude plugins installed"
-  done_item "Claude plugins"
-else
-  warn "Claude not installed; skipping plugin install."
-  manual_item "Install plugins later: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
-fi
+warn "Plugin install requires authentication — skipping automatic install."
+manual_item "Authenticate personal account: run 'claude' and follow the login prompt"
+manual_item "Authenticate work account (if applicable): run 'claude-work' and follow the login prompt"
+manual_item "Then install plugins: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
 
 # ── Summary ────────────────────────────────────────────────────────────────────
 echo ""

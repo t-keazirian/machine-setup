@@ -83,11 +83,39 @@ Restart your terminal, or run:
 source ~/.zshrc
 ```
 
-Then open a new terminal and install a Java version via SDKMAN:
+Then complete the following manual steps — `setup.sh` cannot do these for you:
+
+**1. Install a Java version via SDKMAN** (open a new terminal first):
 
 ```bash
 sdk install java
 ```
+
+**2. Authenticate Claude Code (personal account):**
+
+```bash
+claude
+```
+
+Follow the login prompt. This initializes `~/.claude` and authenticates the personal account.
+
+**3. Authenticate Claude Code (work account, if applicable):**
+
+```bash
+claude-work
+```
+
+Follow the login prompt. This initializes `~/.claude-work` and authenticates the work account. See [Claude Code multi-account](#claude-code-multi-account) for details.
+
+**4. Install Claude plugins:**
+
+Once both accounts are authenticated, run the plugin install script:
+
+```bash
+bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
+```
+
+> **Note:** `setup.sh` skips plugin install because authentication must happen first. The setup summary will list these commands as manual steps. See [Claude plugins](#claude-plugins) for details.
 
 ### What setup.sh does
 
@@ -104,11 +132,13 @@ sdk install java
 11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 13. Installs Claude Code (skips if already present)
-14. Runs `scripts/install-claude-plugins.sh` to install and enable all plugins in both personal and work contexts (skips if Claude is not installed)
+14. Skips plugin install and adds it to the manual steps — plugin install requires authentication, which must happen after setup. The summary will prompt you with the exact commands.
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
 
 ### What cannot be automated
+
+**Claude Code authentication** — `setup.sh` installs Claude Code but cannot authenticate. Authentication is interactive and must be done manually after setup. Run `claude` for the personal account and `claude-work` for the work account, then run the plugin install script. See Step 2 above.
 
 **macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
 
@@ -231,9 +261,15 @@ alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
 
 ## Claude plugins
 
-Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` runs this automatically as its final step.
+Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` skips this step because authentication must happen first — **you must run it manually after authenticating both accounts** (see Step 2 above).
 
-The script installs plugins into both the personal (`~/.claude`) and work (`~/.claude-work`) contexts. The personal list is the hardcoded source of truth; the work list is derived automatically from whatever is installed in the personal context (minus anything in `PERSONAL_ONLY`).
+The script installs plugins into both the personal (`~/.claude`) and work (`~/.claude-work`) contexts. The personal list (`PERSONAL_PLUGINS` in the script) is the hardcoded source of truth for fresh machines. The work list is derived automatically from whatever is installed in the personal context, minus anything in `PERSONAL_ONLY` — so adding a plugin to personal and re-running syncs it to work with no script edits required.
+
+### Prerequisites
+
+- `jq` must be installed. It is included in the Brewfile and installed automatically by `setup.sh`. If running the script manually on a machine where `setup.sh` has not been run, install it first: `brew install jq`.
+- Both Claude accounts must be authenticated before running. See [Claude Code multi-account](#claude-code-multi-account) and Step 2 above.
+- Personal context must be set up before work. If running contexts separately, always run `--context personal` before `--context work`.
 
 ### Adding a new plugin
 
@@ -243,18 +279,20 @@ The script installs plugins into both the personal (`~/.claude`) and work (`~/.c
    bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
    ```
 3. Update `PERSONAL_PLUGINS` in `scripts/install-claude-plugins.sh` so the plugin is included on fresh machine setups.
-4. If the plugin comes from a **new marketplace** (not `claude-plugins-official` or `craft`), also add a `claude plugin marketplace add` line to the personal section — and, if it should sync to work, to the work section as well.
+4. If the plugin comes from a **new marketplace** (not `claude-plugins-official`, `cc-marketplace`, or `craft`), also add a `claude plugin marketplace add` line to the personal section of the script — and to the work section if it should sync there too.
 
 ### Keeping a plugin personal-only
 
 Add its plugin ID to the `PERSONAL_ONLY` array in `scripts/install-claude-plugins.sh`. The work sync will skip it automatically.
+
+`cc-marketplace` plugins (e.g. `safety-net`) are personal-only by default and will never be synced to work.
 
 ### Running the script manually
 
 Run using the full path — the script is not on `$PATH`:
 
 ```bash
-# Both contexts (default)
+# Both contexts (default) — personal must be authenticated before work
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 
 # One context only
