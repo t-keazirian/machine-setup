@@ -115,7 +115,7 @@ Once both accounts are authenticated, run the plugin install script:
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 ```
 
-> **Note:** `setup.sh` attempts to run this automatically at step 14, but it runs before you have authenticated. You will need to run it manually after completing the auth steps above. See [Claude plugins](#claude-plugins) for details.
+> **Note:** `setup.sh` skips plugin install because authentication must happen first. The setup summary will list these commands as manual steps. See [Claude plugins](#claude-plugins) for details.
 
 ### What setup.sh does
 
@@ -132,13 +132,13 @@ bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 13. Installs Claude Code (skips if already present)
-14. Attempts to run `scripts/install-claude-plugins.sh` for both personal and work contexts — **this will likely fail on a fresh machine** because Claude accounts are not yet authenticated. Re-run the script manually after completing Step 2.
+14. Skips plugin install and adds it to the manual steps — plugin install requires authentication, which must happen after setup. The summary will prompt you with the exact commands.
 
 Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
 
 ### What cannot be automated
 
-**Claude Code authentication** — `setup.sh` installs Claude Code and attempts to install plugins, but authentication is interactive and must be done manually after setup. Run `claude` for the personal account and `claude-work` for the work account, then re-run the plugin script. See Step 2 above.
+**Claude Code authentication** — `setup.sh` installs Claude Code but cannot authenticate. Authentication is interactive and must be done manually after setup. Run `claude` for the personal account and `claude-work` for the work account, then run the plugin install script. See Step 2 above.
 
 **macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
 
@@ -261,7 +261,7 @@ alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
 
 ## Claude plugins
 
-Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` attempts to run this automatically as its final step — but since authentication must happen first, **you will need to run it manually after authenticating both accounts** (see Step 2 above).
+Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` skips this step because authentication must happen first — **you must run it manually after authenticating both accounts** (see Step 2 above).
 
 The script installs plugins into both the personal (`~/.claude`) and work (`~/.claude-work`) contexts. The personal list (`PERSONAL_PLUGINS` in the script) is the hardcoded source of truth for fresh machines. The work list is derived automatically from whatever is installed in the personal context, minus anything in `PERSONAL_ONLY` — so adding a plugin to personal and re-running syncs it to work with no script edits required.
 
