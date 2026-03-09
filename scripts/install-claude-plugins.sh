@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # ── install-claude-plugins.sh ──────────────────────────────────────────────────
-# Declaratively installs and enables Claude Code plugins for personal and/or
-# work contexts. Idempotent — safe to re-run on an already-configured machine.
+# Declaratively installs Claude Code plugins for personal and/or work contexts.
+# Idempotent — safe to re-run on an already-configured machine.
 #
 # Personal context: driven by PERSONAL_PLUGINS (source of truth for fresh machines).
 # Work context: derived automatically from personal's installed_plugins.json,
@@ -94,7 +94,6 @@ if [[ "$CONTEXT" == "personal" || "$CONTEXT" == "both" ]]; then
   for plugin in "${PERSONAL_PLUGINS[@]}"; do
     warn "Installing: $plugin"
     CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin install "$plugin"
-    CLAUDE_CONFIG_DIR="$PERSONAL_DIR" claude plugin enable "$plugin" || true
     ok "$plugin"
   done
 
@@ -131,7 +130,6 @@ if [[ "$CONTEXT" == "work" || "$CONTEXT" == "both" ]]; then
 
     warn "Installing: $plugin"
     CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin install "$plugin"
-    CLAUDE_CONFIG_DIR="$WORK_DIR" claude plugin enable "$plugin" || true
     ok "$plugin"
   done
 
