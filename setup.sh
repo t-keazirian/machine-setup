@@ -259,9 +259,13 @@ manual_item "Authenticate Claude Code: run 'claude' and log in"
 # ── 13. Claude Plugins ────────────────────────────────────────────────────────
 info "14/14 Claude Plugins"
 if command -v claude &>/dev/null; then
-  bash "$DOTFILES_DIR/scripts/install-claude-plugins.sh"
-  ok "Claude plugins installed"
-  done_item "Claude plugins"
+  if bash "$DOTFILES_DIR/scripts/install-claude-plugins.sh"; then
+    ok "Claude plugins installed"
+    done_item "Claude plugins"
+  else
+    warn "Plugin install failed — Claude accounts may not be authenticated yet."
+    manual_item "After authenticating ('claude' and 'claude-work'), run: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
+  fi
 else
   warn "Claude not installed; skipping plugin install."
   manual_item "Install plugins later: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
