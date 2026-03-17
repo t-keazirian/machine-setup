@@ -1,7 +1,12 @@
 [user]
-  # Fill in your own name and email — see README for instructions.
-  name  = Your Name
-  email = you@example.com
+  # Name and email live in ~/.gitconfig.local (not committed — keep private).
+  # Create that file with:
+  #   [user]
+  #     name = Your Name
+  #     email = you@example.com
+
+[include]
+  path = ~/.gitconfig.local
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
