@@ -60,6 +60,7 @@ Specifically call out: production risks (crashes, data loss, security issues), s
 - Favor clarity over clever abstractions.
 - Suggest missing tests before writing them; wait for confirmation on scope.
 - Flag logic that is hard to test and explain why (tight coupling, side effects, time-dependence).
+- For TDD sessions, prefer `crafter:tdd` over `superpowers:test-driven-development`.
 
 ---
 
