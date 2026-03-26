@@ -82,9 +82,10 @@ Specifically call out: production risks (crashes, data loss, security issues), s
 
 ## Terminology
 
-- "slash command" or "custom command" refers to files in `.claude/commands/`. These are user-invocable.
-- "skill" refers to plugin-provided skills (installed via plugins). Do not use "skill" to mean a slash command.
-- Never use these terms interchangeably unless explicitly instructed.
+- "skill" and "slash command" are the same concept in Claude Code. Anthropic has merged them: `.claude/commands/foo.md` and `.claude/skills/foo/SKILL.md` both create `/foo` and behave identically.
+- The `.claude/commands/` format is older and simpler. The `.claude/skills/` format is newer and adds optional features (frontmatter, supporting files, invocation control). Both are valid.
+- "plugin skill" or "bundled skill" refers to skills that ship with a plugin (e.g., superpowers, hookify). These are distinct from skills you author yourself, but the format is the same.
+- Use "skill" as the default term. Only say "slash command" when specifically referring to the `/name` invocation syntax.
 
 ---
 
