@@ -2,6 +2,8 @@
 
 This repo is the single source of truth for my shell, Vim, Git configuration, scripts, and new machine automation.
 
+> **Private companion:** [`machine-setup-private`](https://github.com/t-keazirian/machine-setup-private) holds personal Claude Code skills and other config that shouldn't be public. Clone and run its `bootstrap.sh` after this setup completes.
+
 ## What's in here
 
 - `.zshrc` (symlinked to `~/.zshrc`)
@@ -116,6 +118,17 @@ bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 ```
 
 > **Note:** `setup.sh` skips plugin install because authentication must happen first. The setup summary will list these commands as manual steps. See [Claude plugins](#claude-plugins) for details.
+
+**5. Set up private config:**
+
+Clone `machine-setup-private` and run its bootstrap to wire up personal Claude skills:
+
+```bash
+git clone git@github.com:t-keazirian/machine-setup-private.git ~/Code/machine-setup-private
+cd ~/Code/machine-setup-private
+chmod +x bootstrap.sh
+./bootstrap.sh
+```
 
 ### What setup.sh does
 
