@@ -7,7 +7,6 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 ## What's in here
 
 - `.zshrc` (symlinked to `~/.zshrc`)
-- `CLAUDE.md` (symlinked to `~/.claude/CLAUDE.md`) — global Claude Code working agreement
 - `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked by this repo** (create manually on each machine)
 - `.vimrc` (symlinked to `~/.vimrc`)
 - `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
@@ -187,7 +186,7 @@ chmod +x bootstrap.sh
 - Detects architecture (Apple Silicon vs Intel) and symlinks the appropriate `.zshrc` to `~/.zshrc`
 - Creates symlinks in the home directory pointing to this repo's files
 - Configures Git to use `~/.gitignore-global` via `core.excludesfile`
-- Creates `~/.claude/` if needed and symlinks `CLAUDE.md` into it
+- Creates `~/.claude/` if needed (CLAUDE.md is wired by `machine-setup-private`)
 
 ### Rollback
 
