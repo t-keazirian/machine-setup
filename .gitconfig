@@ -85,6 +85,9 @@
  # Actual cleanup
     clean-remote = "!git fetch --prune origin"
 
- # After merging a PR: switch to main, pull, delete merged local branches
-    done = "!git checkout main && git pull && git clean-branches"
+ # Remove all agent-generated worktrees under .claude/worktrees/, then prune stale refs
+    wipe-agents = "!git worktree list | grep '.claude/worktrees' | awk '{print $1}' | xargs -I{} git worktree remove {} 2>/dev/null; git worktree prune; echo 'Agent worktrees cleaned'"
+
+ # After merging a PR: switch to main, pull, clean agent worktrees, delete merged local branches
+    done = "!git checkout main && git pull && git wipe-agents && git clean-branches"
 
