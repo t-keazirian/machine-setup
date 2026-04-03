@@ -69,7 +69,7 @@
         git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
         | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\" \
         | while IFS= read -r b; do \
-        [ -n \"$b\" ] && echo \"Deleting $b\" && git branch -d \"$b\"; \
+        [ -n \"$b\" ] && echo \"Deleting $b\" && git branch -D \"$b\"; \
         done; \
         }; f"
 
