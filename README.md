@@ -8,7 +8,8 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 - `.zshrc` (symlinked to `~/.zshrc`)
 - `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked by this repo** (create manually on each machine)
-- `.vimrc` (symlinked to `~/.vimrc`)
+- `.vimrc` (symlinked to `~/.vimrc`) — uses [vim-plug](https://github.com/junegunn/vim-plug) for plugin management
+- `.ideavimrc` (symlinked to `~/.ideavimrc`) — IdeaVim config for WebStorm, mirrors `.vimrc` settings
 - `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
@@ -22,6 +23,7 @@ Instead of copying dotfiles around, this setup uses symlinks:
 
 - `~/.zshrc` points to `~/Code/machine-setup/.zshrc`
 - `~/.vimrc` points to `~/Code/machine-setup/.vimrc`
+- `~/.ideavimrc` points to `~/Code/machine-setup/.ideavimrc`
 - `~/.gitconfig` points to `~/Code/machine-setup/.gitconfig`
 - `~/.gitignore-global` points to `~/Code/machine-setup/.gitignore-global`
 - `~/Code/machine-setup/scripts/` is added to `$PATH` directly in `.zshrc`
@@ -140,7 +142,7 @@ chmod +x bootstrap.sh
 7. Prompts for your Git name and email and writes them to `~/.gitconfig` (skips if already set)
 8. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
 9. Installs SDKMAN
-10. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
+10. Installs [vim-plug](https://github.com/junegunn/vim-plug) via curl, creates `~/.vim/undodir`, runs `:PlugInstall` in Vim
 11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 13. Installs Claude Code (skips if already present)
@@ -183,6 +185,7 @@ chmod +x bootstrap.sh
   - `~/.vimrc` → `~/.vimrc.pre-bootstrap`
   - `~/.gitconfig` → `~/.gitconfig.pre-bootstrap`
   - `~/.gitignore-global` → `~/.gitignore-global.pre-bootstrap`
+  - `~/.ideavimrc` → `~/.ideavimrc.pre-bootstrap`
 - Detects architecture (Apple Silicon vs Intel) and symlinks the appropriate `.zshrc` to `~/.zshrc`
 - Creates symlinks in the home directory pointing to this repo's files
 - Configures Git to use `~/.gitignore-global` via `core.excludesfile`
@@ -195,7 +198,7 @@ If something goes wrong:
 1. Remove the symlink(s):
 
 ```bash
-rm ~/.zshrc ~/.vimrc ~/.gitconfig ~/.gitignore-global
+rm ~/.zshrc ~/.vimrc ~/.gitconfig ~/.gitignore-global ~/.ideavimrc
 ```
 
 2. Restore the backups:
@@ -205,6 +208,7 @@ mv ~/.zshrc.pre-bootstrap ~/.zshrc
 mv ~/.vimrc.pre-bootstrap ~/.vimrc
 mv ~/.gitconfig.pre-bootstrap ~/.gitconfig
 mv ~/.gitignore-global.pre-bootstrap ~/.gitignore-global
+mv ~/.ideavimrc.pre-bootstrap ~/.ideavimrc
 ```
 
 3. Reload terminal
