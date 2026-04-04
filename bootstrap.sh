@@ -46,5 +46,6 @@ fi
 link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 link "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.gitignore-global" "$HOME/.gitignore-global"
+link "$DOTFILES_DIR/.ideavimrc" "$HOME/.ideavimrc"
 echo "[$TIMESTAMP] Bootstrap complete."
 echo "[$TIMESTAMP] Restart your terminal or run: source ~/.zshrc"
