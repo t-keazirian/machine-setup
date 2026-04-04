@@ -49,6 +49,6 @@ noremap <C-l> <C-w>l
 " <Leader>ts — run the current run configuration (closest to suite)
 " <Leader>tl — rerun the last test run
 nnoremap <Leader>tn :action RunClass<CR>
-nnoremap <Leader>tf :action RerunTests<CR>
-nnoremap <Leader>ts :action RunConfiguration<CR>
+nnoremap <Leader>tf :action RunClass<CR>
+nnoremap <Leader>ts :action Run<CR>
 nnoremap <Leader>tl :action Rerun<CR>
