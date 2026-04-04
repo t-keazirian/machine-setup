@@ -28,6 +28,7 @@ backup ".zshrc"
 backup ".vimrc"
 backup ".gitconfig"
 backup ".gitignore-global"
+backup ".ideavimrc"
 
 # --- create symlinks ---
 link() {
