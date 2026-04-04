@@ -38,7 +38,6 @@ endif
 " vim-mix-format
 let g:mix_format_on_save = 1
 let g:elm_format_on_save = 1
-let g:rainbow_active = 1
 
 " Disable swap files
 set noswapfile
@@ -114,6 +113,9 @@ Plug 'tmhedberg/SimpylFold'            " Python folding
 call plug#end()
 filetype plugin indent on
 au FileType json setl sw=2 sts=2 et                " Indentation for json
+
+" Rainbow parentheses
+let g:rainbow_active = 1
 
 " Git Branch/Lightline
 let g:lightline = {
