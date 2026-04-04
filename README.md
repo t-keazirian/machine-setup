@@ -8,7 +8,8 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 - `.zshrc` (symlinked to `~/.zshrc`)
 - `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked by this repo** (create manually on each machine)
-- `.vimrc` (symlinked to `~/.vimrc`)
+- `.vimrc` (symlinked to `~/.vimrc`) — uses [vim-plug](https://github.com/junegunn/vim-plug) for plugin management
+- `.ideavimrc` (symlinked to `~/.ideavimrc`) — IdeaVim config for WebStorm, mirrors `.vimrc` settings
 - `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
 - `.gitignore-global` (symlinked to `~/.gitignore-global`)
 - `.gitignore` (repo-level ignore for editor artifacts)
@@ -22,6 +23,7 @@ Instead of copying dotfiles around, this setup uses symlinks:
 
 - `~/.zshrc` points to `~/Code/machine-setup/.zshrc`
 - `~/.vimrc` points to `~/Code/machine-setup/.vimrc`
+- `~/.ideavimrc` points to `~/Code/machine-setup/.ideavimrc`
 - `~/.gitconfig` points to `~/Code/machine-setup/.gitconfig`
 - `~/.gitignore-global` points to `~/Code/machine-setup/.gitignore-global`
 - `~/Code/machine-setup/scripts/` is added to `$PATH` directly in `.zshrc`
@@ -140,7 +142,7 @@ chmod +x bootstrap.sh
 7. Prompts for your Git name and email and writes them to `~/.gitconfig` (skips if already set)
 8. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
 9. Installs SDKMAN
-10. Clones Vundle, creates `~/.vim/undodir`, runs `:PluginInstall` in Vim
+10. Installs [vim-plug](https://github.com/junegunn/vim-plug) via curl, creates `~/.vim/undodir`, runs `:PlugInstall` in Vim
 11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
 12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
 13. Installs Claude Code (skips if already present)
@@ -155,6 +157,22 @@ Each step prints "already done, skipping" if it detects it has been run before. 
 **macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
 
 **JetBrains settings** — use JetBrains Toolbox's built-in settings sync.
+
+**IdeaVim (WebStorm Vim emulation)** — this repo includes a `.ideavimrc` (symlinked to `~/.ideavimrc`) that configures Vim emulation inside WebStorm. However, the file does nothing on its own — you must install and configure the IdeaVim plugin in WebStorm first. IdeaVim is a JetBrains-maintained plugin that adds a Vim layer on top of the IDE; it reads `~/.ideavimrc` the same way Vim reads `~/.vimrc`.
+
+To set it up on a new machine:
+
+1. **Install IdeaVim** — open WebStorm, go to `Settings → Plugins`, search for "IdeaVim", install it, and restart WebStorm. IdeaVim is a first-party JetBrains plugin and does not require a separate license.
+
+2. **Verify it picked up `~/.ideavimrc`** — after restarting, open a file and check that Vim normal mode is active (you should see `-- NORMAL --` or a block cursor). Then run `:set surround?` in the IdeaVim command line (`:`). If it returns `surround` rather than `nosurround`, the `.ideavimrc` was loaded correctly. If it wasn't picked up automatically, go to `Settings → Tools → IdeaVim` and confirm the path points to `~/.ideavimrc`.
+
+3. **Understand what `.ideavimrc` gives you** — the file enables three IdeaVim extensions that are bundled with the plugin and require no separate install: `surround` (visual-mode `S"` to wrap selections, `cs"'` to change surrounds, `ds"` to delete surrounds — mirrors `tpope/vim-surround`), `commentary` (`gcc` to comment a line, `gc` with a motion — mirrors `tpope/vim-commentary`), and `highlightedyank` (briefly highlights text when you yank it). It also mirrors the search behavior, editor settings, split behavior, folding, and window-navigation keymaps (`<C-h/j/k/l>`) from `.vimrc`. Color settings, cursor shapes, ALE, Lightline, and format-on-save config are intentionally absent — WebStorm handles all of that natively through its own settings.
+
+4. **Test runner keymaps** — `<Leader>tn`, `<Leader>tf`, `<Leader>ts`, and `<Leader>tl` are mapped to WebStorm's built-in test runner actions. These are approximate equivalents to the `test.vim` keymaps in `.vimrc`: `<Leader>tn` runs the test at the cursor (`RunClass`), `<Leader>tf` runs all tests in the file (also `RunClass`, which infers scope from context), `<Leader>ts` runs the current run configuration (`Run`), and `<Leader>tl` reruns the last run (`Rerun`). You can verify any action name is valid by running `:actionlist <name>` in the IdeaVim command line.
+
+5. **What IdeaVim does not support** — IdeaVim does not have a plugin system equivalent to vim-plug. The `set surround`, `set commentary`, and `set highlightedyank` lines in `.ideavimrc` activate extensions that are bundled with IdeaVim itself, not installed from GitHub. Any Vim plugin you install via vim-plug in your terminal Vim (`~/.vim/plugged/`) will have no effect in WebStorm. If you want additional IdeaVim behavior, check the [IdeaVim supported plugins list](https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins) — only plugins on that list can be activated via `.ideavimrc`.
+
+6. **Disabling Vim mode temporarily** — if you ever need to turn off IdeaVim without uninstalling it, use the toggle in `Tools → IdeaVim` or the status bar icon (a Vim logo appears in the bottom-right of the IDE when IdeaVim is active).
 
 **iTerm2 profile** — export your `.itermcolors` theme and JSON profile from iTerm2 > Preferences > Profiles > Export. Optionally add these to the repo later.
 
@@ -183,6 +201,7 @@ chmod +x bootstrap.sh
   - `~/.vimrc` → `~/.vimrc.pre-bootstrap`
   - `~/.gitconfig` → `~/.gitconfig.pre-bootstrap`
   - `~/.gitignore-global` → `~/.gitignore-global.pre-bootstrap`
+  - `~/.ideavimrc` → `~/.ideavimrc.pre-bootstrap`
 - Detects architecture (Apple Silicon vs Intel) and symlinks the appropriate `.zshrc` to `~/.zshrc`
 - Creates symlinks in the home directory pointing to this repo's files
 - Configures Git to use `~/.gitignore-global` via `core.excludesfile`
@@ -195,7 +214,7 @@ If something goes wrong:
 1. Remove the symlink(s):
 
 ```bash
-rm ~/.zshrc ~/.vimrc ~/.gitconfig ~/.gitignore-global
+rm ~/.zshrc ~/.vimrc ~/.gitconfig ~/.gitignore-global ~/.ideavimrc
 ```
 
 2. Restore the backups:
@@ -205,6 +224,7 @@ mv ~/.zshrc.pre-bootstrap ~/.zshrc
 mv ~/.vimrc.pre-bootstrap ~/.vimrc
 mv ~/.gitconfig.pre-bootstrap ~/.gitconfig
 mv ~/.gitignore-global.pre-bootstrap ~/.gitignore-global
+mv ~/.ideavimrc.pre-bootstrap ~/.ideavimrc
 ```
 
 3. Reload terminal

@@ -1,6 +1,13 @@
 set nocompatible
 syntax on
 
+" Auto-install vim-plug if not present
+let data_dir = '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 " Use Ctrl + [h,j,k,l] to move window focus
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
@@ -83,41 +90,32 @@ set incsearch
 set ignorecase
 set smartcase     "type all lowercase = case-insensitive; type one+ words uppercase = case-sensitive
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plug 'avakhov/vim-yaml'                " Yaml syntax
+Plug 'bronson/vim-trailing-whitespace' " Highlight trailing whitespace
+Plug 'luochen1990/rainbow'             " Parenthesis highlighting (maintained fork)
+Plug 'tpope/vim-surround'              " Surround motions
+Plug 'itchyny/lightline.vim'           " Better status line
+Plug 'itchyny/vim-gitbranch'           " Git branch display
+Plug 'elmcast/elm-vim'                 " Elm
+Plug 'elixir-lang/vim-elixir'          " Elixir
+Plug 'elzr/vim-json'                   " JSON
+Plug 'dense-analysis/ale'              " Linting engine
+Plug 'pangloss/vim-javascript'         " Javascript
+Plug 'maxmellon/vim-jsx-pretty'        " JSX highlighting (maintained)
+Plug 'rust-lang/rust.vim'              " Rust
+Plug 'preservim/nerdtree'              " File tree
+Plug 'leafgarland/typescript-vim'      " Typescript
+Plug 'mileszs/ack.vim'                 " ack/ag search
+Plug 'tmhedberg/SimpylFold'            " Python folding
 
-
-Plugin 'avakhov/vim-yaml'                          " Yaml syntax
-Plugin 'bronson/vim-trailing-whitespace'           " Hightlight trailing whitespace
-Plugin 'kien/rainbow_parentheses.vim'              " Parenthesis highlighting
-Plugin 'MarcWeber/vim-addon-mw-utils'              " Interprets file by extension
-Plugin 'tpope/vim-surround'                        " Better parenthesis support
-Plugin 'itchyny/lightline.vim'                     " Better status line
-Plugin 'git@github.com:itchyny/vim-gitbranch.git'  " Git Branch display
-Plugin 'elmcast/elm-vim'                           " Elm plugin
-Plugin 'elixir-lang/vim-elixir'                    " Elixir plugin
-Plugin 'elzr/vim-json'                             " Json
-Plugin 'w0rp/ale'                                  " Linting engine
-Plugin 'pangloss/vim-javascript'                   " Javascript
-Plugin 'othree/yajs.vim'                           " javascript syntax
-Plugin 'mxw/vim-jsx'                               " JSX highlighting
-Plugin 'eagletmt/ghcmod-vim'
-Plugin 'Shougo/vimproc'
-Plugin 'rust-lang/rust.vim'                        " Rust plugin
-Plugin 'preservim/nerdtree'                        " The NERDTree
-Plugin 'tomlion/vim-solidity'                      " Solidity syntax
-Plugin 'leafgarland/typescript-vim'                " Typescript syntax
-Plugin 'mileszs/ack.vim'                           " ack.vim (brew install ack the_silver_searcher)
-Plugin 'tmhedberg/SimpylFold'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#end()
+filetype plugin indent on
 au FileType json setl sw=2 sts=2 et                " Indentation for json
+
+" Rainbow parentheses
+let g:rainbow_active = 1
 
 " Git Branch/Lightline
 let g:lightline = {
