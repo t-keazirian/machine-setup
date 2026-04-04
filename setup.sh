@@ -179,36 +179,37 @@ else
 fi
 manual_item "Open a new terminal and run: sdk install java"
 
-# ── 9. Vundle + Vim plugins ────────────────────────────────────────────────────
-info "10/12 Vundle + Vim plugins"
-VUNDLE_DIR="$HOME/.vim/bundle/Vundle.vim"
-if [ -d "$VUNDLE_DIR" ]; then
-  skip "Vundle"
+# ── 9. vim-plug + Vim plugins ─────────────────────────────────────────────────
+info "10/12 vim-plug + Vim plugins"
+PLUG_FILE="$HOME/.vim/autoload/plug.vim"
+mkdir -p "$HOME/.vim/undodir"
+
+if [ -f "$PLUG_FILE" ]; then
+  skip "vim-plug"
 else
-  warn "Cloning Vundle..."
-  mkdir -p "$HOME/.vim/bundle"
-  if git clone https://github.com/VundleVim/Vundle.vim.git "$VUNDLE_DIR"; then
-    ok "Vundle cloned"
-    done_item "Vundle"
+  warn "Installing vim-plug..."
+  mkdir -p "$HOME/.vim/autoload"
+  if curl -fLo "$PLUG_FILE" --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+    ok "vim-plug installed"
+    done_item "vim-plug"
   else
-    warn "Failed to clone Vundle (SSH keys may not be configured yet)."
-    manual_item "Clone Vundle: git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim"
+    warn "Failed to install vim-plug."
+    manual_item "Install vim-plug: curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   fi
 fi
 
-mkdir -p "$HOME/.vim/undodir"
-
-if [ -d "$VUNDLE_DIR" ]; then
-  warn "Running :PluginInstall in Vim (this may take a moment)..."
-  if vim -u "$HOME/.vimrc" +PluginInstall +qall 2>/dev/null; then
+if [ -f "$PLUG_FILE" ]; then
+  warn "Running :PlugInstall in Vim (this may take a moment)..."
+  if vim +PlugInstall +qall 2>/dev/null; then
     ok "Vim plugins installed"
-    done_item "Vim plugins (Vundle)"
+    done_item "Vim plugins (vim-plug)"
   else
     warn "Vim plugin install failed or had errors (may be fine; check manually)."
-    manual_item "Open vim and run :PluginInstall after SSH keys are configured"
+    manual_item "Open vim and run :PlugInstall"
   fi
 else
-  manual_item "Open vim and run :PluginInstall after SSH keys are configured"
+  manual_item "Open vim and run :PlugInstall after vim-plug is installed"
 fi
 
 # ── 10. scripts/ permissions ──────────────────────────────────────────────────
