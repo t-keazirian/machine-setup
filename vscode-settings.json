@@ -1,0 +1,198 @@
+{
+	"workbench.colorTheme": "One Dark Pro Flat",
+	"workbench.iconTheme": "helium-icon-theme",
+	"git.autofetch": true,
+	"git.confirmSync": false,
+	"githubPullRequests.pullBranch": "never",
+	"explorer.confirmDragAndDrop": false,
+	"emmet.triggerExpansionOnTab": true,
+	"emmet.showSuggestionsAsSnippets": true,
+	"emmet.syntaxProfiles": {},
+	"emmet.includeLanguages": {
+		"phoenix-heex": "html"
+	},
+	"editor.quickSuggestions": {
+		"comments": "on",
+		"strings": "on",
+		"other": "on"
+	},
+	"editor.fontFamily": "'Dank Mono', Menlo, Monaco, 'Courier New', monospace",
+	"editor.suggest.localityBonus": true,
+	"editor.cursorBlinking": "solid",
+	"editor.detectIndentation": true,
+	"editor.accessibilitySupport": "off",
+	"editor.wordWrap": "on",
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
+	"editor.fontSize": 16,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.guides.bracketPairs": true,
+	"editor.guides.bracketPairsHorizontal": true,
+	"editor.guides.highlightActiveBracketPair": true,
+	"editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+	"editor.formatOnSave": true,
+	"editor.tabCompletion": "on",
+	"editor.formatOnPaste": true,
+	"editor.formatOnSaveMode": "file",
+	"editor.renderWhitespace": "all",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"prettier.useTabs": false,
+	"prettier.arrowParens": "avoid",
+	"prettier.singleQuote": false,
+	"prettier.jsxSingleQuote": true,
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[elixir]": {
+		"editor.defaultFormatter": "JakeBecker.elixir-ls"
+	},
+	"[csharp]": {
+		"editor.defaultFormatter": "ms-dotnettools.csharp"
+	},
+	"[sql]": {
+		"editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+	},
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.black-formatter",
+		"editor.codeLens": false,
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"diffEditor.ignoreTrimWhitespace": false,
+		"editor.renderWhitespace": "all",
+		"files.trimTrailingWhitespace": true,
+		"editor.formatOnType": true
+	},
+	"liveServer.settings.donotShowInfoMsg": true,
+	"liveServer.settings.CustomBrowser": "chrome",
+	"liveServer.settings.donotVerifyTags": true,
+	"vim.easymotion": true,
+	"vim.inccommand": "replace",
+	"vim.incsearch": true,
+	"vim.hlsearch": true,
+	"vim.useSystemClipboard": true,
+	"vim.highlightedyank.enable": true,
+	"vim.searchHighlightColor": "#fff",
+	"vim.searchMatchColor": "#7A5980",
+	"vim.highlightedyank.duration": 1000,
+	"vim.useCtrlKeys": true,
+	"vim.surround": true,
+	"vim.ignorecase": true,
+	"vim.smartcase": true,
+	"vim.scrolloff": 4,
+	"vim.normalModeKeyBindingsNonRecursive": [
+		{
+			"before": ["u"],
+			"after": [],
+			"commands": [{ "command": "undo" }]
+		},
+		{
+			"before": ["<C-r>"],
+			"after": [],
+			"commands": [{ "command": "redo" }]
+		},
+		{
+			"before": ["<C-h>"],
+			"commands": [{ "command": "workbench.action.focusLeftGroup" }]
+		},
+		{
+			"before": ["<C-j>"],
+			"commands": [{ "command": "workbench.action.focusDownGroup" }]
+		},
+		{
+			"before": ["<C-k>"],
+			"commands": [{ "command": "workbench.action.focusUpGroup" }]
+		},
+		{
+			"before": ["<C-l>"],
+			"commands": [{ "command": "workbench.action.focusRightGroup" }]
+		}
+	],
+	"tailwindCSS.includeLanguages": {
+		"elixir": "html",
+		"phoenix-heex": "html"
+	},
+	"cSpell.ignoreWords": [
+		"LWFSS",
+		"Parens",
+		"buttoncta",
+		"dotnettools",
+		"esbenp",
+		"experimentllc",
+		"heex"
+	],
+	"cSpell.userWords": [
+		"ALTM",
+		"autogen",
+		"blogful",
+		"boir",
+		"createdb",
+		"crosssell",
+		"datasources",
+		"DOCUSIGN",
+		"dunder",
+		"enneagram",
+		"Freemium",
+		"gbooks",
+		"glenview",
+		"hipaa",
+		"keazirian",
+		"keazirian's",
+		"keepwith",
+		"legalzoom",
+		"luxon",
+		"mifflin",
+		"msrp",
+		"Negroni",
+		"noreferrer",
+		"numberify",
+		"postdeploy",
+		"postgrator",
+		"postgresql",
+		"predeploy",
+		"psql",
+		"Rishabh",
+		"somers",
+		"tailwindcss",
+		"testid",
+		"thinkful",
+		"upsell",
+		"USPTO",
+		"uuidv",
+		"Wireframe",
+		"Xunit"
+	],
+	"editor.stickyScroll.enabled": true,
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"diffEditor.ignoreTrimWhitespace": false,
+	"window.commandCenter": true,
+	"debug.javascript.autoAttachFilter": "disabled",
+	"extensions.experimental.affinity": {
+		"vscodevim.vim": 1
+	},
+	"redhat.telemetry.enabled": true,
+	"[groovy]": {
+		"editor.defaultFormatter": "NicolasVuillamy.vscode-groovy-lint"
+	},
+	"cSpell.customDictionaries": {
+		"custom-dictionary-user": {
+			"name": "custom-dictionary-user",
+			"path": "~/.cspell/custom-dictionary-user.txt",
+			"addWords": true,
+			"scope": "user"
+		}
+	},
+	"files.autoSave": "onFocusChange",
+	"editor.linkedEditing": true
+}
