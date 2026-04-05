@@ -28,6 +28,8 @@ backup ".zshrc"
 backup ".vimrc"
 backup ".gitconfig"
 backup ".gitignore-global"
+backup ".ideavimrc"
+backup "Library/Application Support/Code/User/settings.json"
 
 # --- create symlinks ---
 link() {
@@ -46,5 +48,7 @@ fi
 link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 link "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.gitignore-global" "$HOME/.gitignore-global"
+link "$DOTFILES_DIR/.ideavimrc" "$HOME/.ideavimrc"
+link "$DOTFILES_DIR/vscode-settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
 echo "[$TIMESTAMP] Bootstrap complete."
 echo "[$TIMESTAMP] Restart your terminal or run: source ~/.zshrc"

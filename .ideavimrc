@@ -1,0 +1,54 @@
+" IdeaVim configuration for WebStorm
+" Mirrors ~/.vimrc settings appropriate for an IDE context.
+" Intentionally omits: color settings, cursor shapes, ale, lightline,
+" mix_format/elm_format — WebStorm handles these natively.
+
+" ── Extensions ────────────────────────────────────────────────────────────────
+set surround        " Visual S" to surround — mirrors vim-surround
+set commentary      " gcc / gc motion to comment
+set highlightedyank " Briefly highlight yanked text
+
+" ── Search ────────────────────────────────────────────────────────────────────
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" ── Editor ────────────────────────────────────────────────────────────────────
+set number
+set scrolloff=4
+set history=1000
+set clipboard=unnamed
+set wrap
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set showmode
+set showcmd
+set showmatch
+
+" ── Splits ────────────────────────────────────────────────────────────────────
+set splitright
+set splitbelow
+
+" ── Folding ───────────────────────────────────────────────────────────────────
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+
+" ── Window navigation (works across editor splits) ────────────────────────────
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+" ── Test runner (delegates to WebStorm's built-in runner) ─────────────────────
+" Approximate equivalents to test.vim keymaps.
+" <Leader>tn — run test nearest to cursor (Run class/method at cursor)
+" <Leader>tf — run all tests in file
+" <Leader>ts — run the current run configuration (closest to suite)
+" <Leader>tl — rerun the last test run
+nnoremap <Leader>tn :action RunClass<CR>
+nnoremap <Leader>tf :action RunClass<CR>
+nnoremap <Leader>ts :action Run<CR>
+nnoremap <Leader>tl :action Rerun<CR>
