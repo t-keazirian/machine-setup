@@ -15,7 +15,8 @@
       "Bash(CLAUDE_CONFIG_DIR=~/.claude claude plugin:*)",
       "Bash(CLAUDE_CONFIG_DIR=/tmp/test-claude bash:*)",
       "Bash(echo \"Exit code: $?\")",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Skill(pr-review-toolkit:review-pr)"
     ]
   }
 }
