@@ -91,7 +91,7 @@ git clone git@github.com:t-keazirian/machine-setup-private.git ~/Code/machine-se
 cd ~/Code/machine-setup-private && chmod +x bootstrap.sh && ./bootstrap.sh
 ```
 
-> **Not automated:** JetBrains settings — use JetBrains Toolbox's built-in settings sync. macOS System Preferences (Dock, keyboard, trackpad) must be configured manually. iTerm2 — export your profile from Preferences > Profiles > Export.
+> **Not automated:** JetBrains settings — use JetBrains Toolbox's built-in settings sync. macOS System Preferences (Dock, keyboard, trackpad) must be configured manually. iTerm2 — export your profile from Preferences > Profiles > Export. Docker Desktop — not tracked in the Brewfile (installed directly, not via Homebrew); install manually and sign in with your work account.
 
 ---
 
