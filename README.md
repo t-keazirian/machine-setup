@@ -171,7 +171,7 @@ bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context personal
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
 ```
 
-**Prerequisites:** `jq` must be installed (it's in the Brewfile; if running without `setup.sh`, install it first with `brew install jq`). Always run `--context personal` before `--context work` — the work list is derived from whatever is installed in the personal context.
+**Prerequisites:** `jq` must be installed (macOS ships it at `/usr/bin/jq`; if for some reason it's missing, `brew install jq`). Always run `--context personal` before `--context work` — the work list is derived from whatever is installed in the personal context.
 
 The script is idempotent — safe to rerun. To add a new plugin: install it in your personal context, sync to work via `--context work`, then add it to `PERSONAL_PLUGINS` in the script so fresh machines get it. Plugins in the `PERSONAL_ONLY` array are never synced to work. If the plugin comes from a marketplace not already registered in the script (`claude-plugins-official`, `cc-marketplace`, `craft`), also add a `claude plugin marketplace add` line to the script for each context that needs it.
 
