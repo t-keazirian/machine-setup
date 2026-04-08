@@ -16,7 +16,19 @@
       "Bash(CLAUDE_CONFIG_DIR=/tmp/test-claude bash:*)",
       "Bash(echo \"Exit code: $?\")",
       "Read(//tmp/**)",
-      "Skill(pr-review-toolkit:review-pr)"
+      "Skill(pr-review-toolkit:review-pr)",
+      "Bash(docker compose:*)",
+      "Bash(docker version:*)",
+      "Read(//Users/taylorkeazirian/.docker/cli-plugins/**)",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker compose:*)",
+      "Read(//Applications/Docker.app/Contents/Resources/cli-plugins/**)",
+      "Bash(~/.docker/cli-plugins/docker-compose compose:*)",
+      "Read(//Users/taylorkeazirian/.docker/**)",
+      "Bash(docker --debug compose version)",
+      "Bash(docker help:*)",
+      "Bash(brew uninstall:*)",
+      "Bash(brew bundle:*)",
+      "Bash(jq --version)"
     ]
   }
 }
