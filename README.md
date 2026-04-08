@@ -6,31 +6,19 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 
 ## What's in here
 
-- `.zshrc` (symlinked to `~/.zshrc`)
-- `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked by this repo** (create manually on each machine)
-- `.vimrc` (symlinked to `~/.vimrc`) — uses [vim-plug](https://github.com/junegunn/vim-plug) for plugin management
-- `.ideavimrc` (symlinked to `~/.ideavimrc`) — IdeaVim config for WebStorm, mirrors `.vimrc` settings
-- `vscode-settings.json` (symlinked to `~/Library/Application Support/Code/User/settings.json`) — full VSCode settings including VSCodeVim config; tracked so a new machine gets your complete editor environment automatically
-- `.gitconfig` (symlinked to `~/.gitconfig`) — ships with placeholder `[user]` values; `setup.sh` will prompt you to fill them in, or see below if running `bootstrap.sh` only
-- `.gitignore-global` (symlinked to `~/.gitignore-global`)
-- `.gitignore` (repo-level ignore for editor artifacts)
-- `Brewfile` (all Homebrew formulae, casks, and VS Code extensions)
-- `scripts/` (utility scripts, on PATH via `~/.zshrc`)
-- `setup.sh` (master setup script for a new machine)
+- `.zshrc` — symlinked to `~/.zshrc`
+- `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked** (create manually on each machine)
+- `.vimrc` — symlinked to `~/.vimrc`; uses [vim-plug](https://github.com/junegunn/vim-plug) for plugin management
+- `.ideavimrc` — symlinked to `~/.ideavimrc`; IdeaVim config for WebStorm; see [docs/ideavim.md](docs/ideavim.md)
+- `vscode-settings.json` — symlinked to `~/Library/Application Support/Code/User/settings.json`; see [docs/vscode.md](docs/vscode.md)
+- `.gitconfig` — symlinked to `~/.gitconfig`; Git identity (name and email) goes in `~/.gitconfig.local` (not tracked); `setup.sh` prompts for these on first run
+- `.gitignore-global` — symlinked to `~/.gitignore-global`
+- `Brewfile` — all Homebrew formulae, casks, and VS Code extensions
+- `scripts/` — utility scripts, on PATH via `.zshrc`
+- `setup.sh` — full setup for a new machine
+- `bootstrap.sh` — symlinks only; useful when repo is already cloned
 
-## How it works
-
-Instead of copying dotfiles around, this setup uses symlinks:
-
-- `~/.zshrc` points to `~/Code/machine-setup/.zshrc`
-- `~/.vimrc` points to `~/Code/machine-setup/.vimrc`
-- `~/.ideavimrc` points to `~/Code/machine-setup/.ideavimrc`
-- `~/Library/Application Support/Code/User/settings.json` points to `~/Code/machine-setup/vscode-settings.json`
-- `~/.gitconfig` points to `~/Code/machine-setup/.gitconfig`
-- `~/.gitignore-global` points to `~/Code/machine-setup/.gitignore-global`
-- `~/Code/machine-setup/scripts/` is added to `$PATH` directly in `.zshrc`
-
-Edits to the dotfiles are automatically tracked by Git.
+Because each file is symlinked (not copied), edits made directly to files in this repo are automatically tracked by Git.
 
 ---
 
@@ -41,11 +29,7 @@ Edits to the dotfiles are automatically tracked by Git.
 | Brand new machine — nothing installed yet | `setup.sh` |
 | Repo already cloned, just need symlinks recreated | `bootstrap.sh` |
 
-**`setup.sh`** is the full setup. It installs Homebrew, Oh My Zsh, NVM, SDKMAN, Vim plugins, and more — then calls `bootstrap.sh` as one of its steps.
-
-**`bootstrap.sh`** only creates dotfile symlinks. It's a subset of `setup.sh`, useful when the repo is already in place and you just need to wire things up (e.g. after cloning on a machine you use occasionally, or after moving the repo).
-
-If in doubt, run `setup.sh`. It skips anything already done.
+`setup.sh` calls `bootstrap.sh` as one of its steps. If in doubt, run `setup.sh` — it skips anything already done and prints its progress as it goes. See [docs/setup.md](docs/setup.md) for a full breakdown of what each script does and how to roll back.
 
 ---
 
@@ -69,26 +53,17 @@ cat ~/.ssh/id_ed25519.pub
 bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/machine-setup/main/setup.sh)
 ```
 
-To review the script before running it:
+To review before running:
 
 ```bash
-# Clone via HTTPS (no SSH keys required to review)
 git clone https://github.com/t-keazirian/machine-setup.git ~/Code/machine-setup
 cat ~/Code/machine-setup/setup.sh
-
-# Then run it
 bash ~/Code/machine-setup/setup.sh
 ```
 
 ### Step 2 — After setup completes
 
-Restart your terminal, or run:
-
-```bash
-source ~/.zshrc
-```
-
-Then complete the following manual steps — `setup.sh` cannot do these for you:
+Restart your terminal, or run `source ~/.zshrc`. Then complete these manual steps in order:
 
 **1. Install a Java version via SDKMAN** (open a new terminal first):
 
@@ -96,95 +71,27 @@ Then complete the following manual steps — `setup.sh` cannot do these for you:
 sdk install java
 ```
 
-**2. Authenticate Claude Code (personal account):**
+**2. Authenticate Claude Code:**
 
 ```bash
-claude
+claude        # personal account
+claude-work   # work account (if applicable)
 ```
 
-Follow the login prompt. This initializes `~/.claude` and authenticates the personal account.
-
-**3. Authenticate Claude Code (work account, if applicable):**
-
-```bash
-claude-work
-```
-
-Follow the login prompt. This initializes `~/.claude-work` and authenticates the work account. See [Claude Code multi-account](#claude-code-multi-account) for details.
-
-**4. Install Claude plugins:**
-
-Once both accounts are authenticated, run the plugin install script:
+**3. Install Claude plugins** (requires both accounts authenticated):
 
 ```bash
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 ```
 
-> **Note:** `setup.sh` skips plugin install because authentication must happen first. The setup summary will list these commands as manual steps. See [Claude plugins](#claude-plugins) for details.
-
-**5. Set up private config:**
-
-Clone `machine-setup-private` and run its bootstrap to wire up personal Claude skills:
+**4. Set up private config:**
 
 ```bash
 git clone git@github.com:t-keazirian/machine-setup-private.git ~/Code/machine-setup-private
-cd ~/Code/machine-setup-private
-chmod +x bootstrap.sh
-./bootstrap.sh
+cd ~/Code/machine-setup-private && chmod +x bootstrap.sh && ./bootstrap.sh
 ```
 
-### What setup.sh does
-
-1. Installs Xcode Command Line Tools (triggers dialog if missing, then waits)
-2. Installs Homebrew (Apple Silicon path: `/opt/homebrew`)
-3. Creates `~/Code/` if it doesn't exist, then clones this repo to `~/Code/machine-setup` (skips if already present)
-4. Runs `brew bundle install --file=Brewfile` — installs all formulae and casks; warns on failures but does not exit
-5. Installs Oh My Zsh (`RUNZSH=no KEEP_ZSHRC=yes` so it doesn't hijack the shell session or overwrite `.zshrc`), then clones `zsh-autosuggestions` and `zsh-syntax-highlighting` into `custom/plugins/`
-6. Runs `bootstrap.sh` to create all dotfile symlinks
-7. Prompts for your Git name and email and writes them to `~/.gitconfig` (skips if already set)
-8. Sources NVM from Homebrew, installs the current Node LTS, and sets it as the default
-9. Installs SDKMAN
-10. Installs [vim-plug](https://github.com/junegunn/vim-plug) via curl, creates `~/.vim/undodir`, runs `:PlugInstall` in Vim
-11. Ensures all scripts in `~/Code/machine-setup/scripts/` are executable (they are on PATH via `.zshrc`)
-12. Creates `~/.zsh/completions/` and clones `maven-bash-completion`
-13. Installs Claude Code (skips if already present)
-14. Skips plugin install and adds it to the manual steps — plugin install requires authentication, which must happen after setup. The summary will prompt you with the exact commands.
-
-Each step prints "already done, skipping" if it detects it has been run before. The script is safe to rerun on an existing machine.
-
-### What cannot be automated
-
-**Claude Code authentication** — `setup.sh` installs Claude Code but cannot authenticate. Authentication is interactive and must be done manually after setup. Run `claude` for the personal account and `claude-work` for the work account, then run the plugin install script. See Step 2 above.
-
-**macOS System Preferences** — Dock position, keyboard repeat rate, trackpad settings, etc. `defaults write` commands are fragile across macOS versions and not automated here. Configure manually.
-
-**JetBrains settings** — use JetBrains Toolbox's built-in settings sync.
-
-**IdeaVim (WebStorm Vim emulation)** — this repo includes a `.ideavimrc` (symlinked to `~/.ideavimrc`) that configures Vim emulation inside WebStorm. However, the file does nothing on its own — you must install and configure the IdeaVim plugin in WebStorm first. IdeaVim is a JetBrains-maintained plugin that adds a Vim layer on top of the IDE; it reads `~/.ideavimrc` the same way Vim reads `~/.vimrc`.
-
-To set it up on a new machine:
-
-1. **Install IdeaVim** — open WebStorm, go to `Settings → Plugins`, search for "IdeaVim", install it, and restart WebStorm. IdeaVim is a first-party JetBrains plugin and does not require a separate license.
-
-2. **Verify it picked up `~/.ideavimrc`** — after restarting, open a file and check that Vim normal mode is active (you should see `-- NORMAL --` or a block cursor). Then run `:set surround?` in the IdeaVim command line (`:`). If it returns `surround` rather than `nosurround`, the `.ideavimrc` was loaded correctly. If it wasn't picked up automatically, go to `Settings → Tools → IdeaVim` and confirm the path points to `~/.ideavimrc`.
-
-3. **Understand what `.ideavimrc` gives you** — the file enables three IdeaVim extensions that are bundled with the plugin and require no separate install: `surround` (visual-mode `S"` to wrap selections, `cs"'` to change surrounds, `ds"` to delete surrounds — mirrors `tpope/vim-surround`), `commentary` (`gcc` to comment a line, `gc` with a motion — mirrors `tpope/vim-commentary`), and `highlightedyank` (briefly highlights text when you yank it). It also mirrors the search behavior, editor settings, split behavior, folding, and window-navigation keymaps (`<C-h/j/k/l>`) from `.vimrc`. Color settings, cursor shapes, ALE, Lightline, and format-on-save config are intentionally absent — WebStorm handles all of that natively through its own settings.
-
-4. **Test runner keymaps** — `<Leader>tn`, `<Leader>tf`, `<Leader>ts`, and `<Leader>tl` are mapped to WebStorm's built-in test runner actions. These are approximate equivalents to the `test.vim` keymaps in `.vimrc`: `<Leader>tn` runs the test at the cursor (`RunClass`), `<Leader>tf` runs all tests in the file (also `RunClass`, which infers scope from context), `<Leader>ts` runs the current run configuration (`Run`), and `<Leader>tl` reruns the last run (`Rerun`). You can verify any action name is valid by running `:actionlist <name>` in the IdeaVim command line.
-
-5. **What IdeaVim does not support** — IdeaVim does not have a plugin system equivalent to vim-plug. The `set surround`, `set commentary`, and `set highlightedyank` lines in `.ideavimrc` activate extensions that are bundled with IdeaVim itself, not installed from GitHub. Any Vim plugin you install via vim-plug in your terminal Vim (`~/.vim/plugged/`) will have no effect in WebStorm. If you want additional IdeaVim behavior, check the [IdeaVim supported plugins list](https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins) — only plugins on that list can be activated via `.ideavimrc`.
-
-6. **Disabling Vim mode temporarily** — if you ever need to turn off IdeaVim without uninstalling it, use the toggle in `Tools → IdeaVim` or the status bar icon (a Vim logo appears in the bottom-right of the IDE when IdeaVim is active).
-
-**VSCode settings** — this repo includes `vscode-settings.json` (symlinked to `~/Library/Application Support/Code/User/settings.json`) which tracks your full VSCode environment: theme, font, formatter config, Emmet, spell check words, and VSCodeVim settings. On a new machine, running `bootstrap.sh` gives you your complete VSCode setup automatically — no manual reconfiguration needed.
-
-The file tracks everything except the `vs-kubernetes` block, which contains machine-specific tool paths auto-generated by the VS Kubernetes extension. Those paths will be regenerated by the extension on first launch. When that happens, they'll appear as a git diff in `vscode-settings.json` — do not commit those diffs.
-
-VSCodeVim is already installed via the Brewfile (the `vscodevim.vim` vscode extension entry). The settings file enables surround (`vim.surround`), case-insensitive smart search (`vim.ignorecase` + `vim.smartcase`), scroll context (`vim.scrolloff`), highlighted yank, EasyMotion, and `<C-h/j/k/l>` window navigation mapped to VSCode's split focus commands. Commentary (`gc`/`gcc`) is built into VSCodeVim and active by default — no explicit setting required.
-
-If you change VSCode settings via the UI on your current machine, those changes write directly through the symlink into the tracked file. Run `git diff vscode-settings.json` to see what changed before deciding whether to commit.
-
-**iTerm2 profile** — export your `.itermcolors` theme and JSON profile from iTerm2 > Preferences > Profiles > Export. Optionally add these to the repo later.
+> **Not automated:** JetBrains settings — use JetBrains Toolbox's built-in settings sync. macOS System Preferences (Dock, keyboard, trackpad) must be configured manually. iTerm2 — export your profile from Preferences > Profiles > Export.
 
 ---
 
@@ -198,79 +105,28 @@ chmod +x bootstrap.sh
 ./bootstrap.sh
 ```
 
-> **Note:** `bootstrap.sh` does not set your Git identity. If you're running it standalone (not via `setup.sh`), update `.gitconfig` manually afterward:
+> **Note:** `bootstrap.sh` does not set your Git identity. If running standalone, update `.gitconfig` manually:
 > ```bash
 > git config --global user.name  "Your Name"
 > git config --global user.email "you@example.com"
 > ```
 
-### What bootstrap.sh does
-- Verifies the repo exists at `~/Code/machine-setup`
-- Backs up any existing dotfiles (only if they are not symlinks):
-  - `~/.zshrc` → `~/.zshrc.pre-bootstrap`
-  - `~/.vimrc` → `~/.vimrc.pre-bootstrap`
-  - `~/.gitconfig` → `~/.gitconfig.pre-bootstrap`
-  - `~/.gitignore-global` → `~/.gitignore-global.pre-bootstrap`
-  - `~/.ideavimrc` → `~/.ideavimrc.pre-bootstrap`
-  - `~/Library/Application Support/Code/User/settings.json` → `~/Library/Application Support/Code/User/settings.json.pre-bootstrap`
-- Detects architecture (Apple Silicon vs Intel) and symlinks the appropriate `.zshrc` to `~/.zshrc`
-- Creates symlinks in the home directory pointing to this repo's files
-- Configures Git to use `~/.gitignore-global` via `core.excludesfile`
-- Creates `~/.claude/` if needed (CLAUDE.md is wired by `machine-setup-private`)
-
-### Rollback
-
-If something goes wrong:
-
-1. Remove the symlink(s):
-
-```bash
-rm ~/.zshrc ~/.vimrc ~/.gitconfig ~/.gitignore-global ~/.ideavimrc \
-   "$HOME/Library/Application Support/Code/User/settings.json"
-```
-
-2. Restore the backups:
-
-```bash
-mv ~/.zshrc.pre-bootstrap ~/.zshrc
-mv ~/.vimrc.pre-bootstrap ~/.vimrc
-mv ~/.gitconfig.pre-bootstrap ~/.gitconfig
-mv ~/.gitignore-global.pre-bootstrap ~/.gitignore-global
-mv ~/.ideavimrc.pre-bootstrap ~/.ideavimrc
-mv "$HOME/Library/Application Support/Code/User/settings.json.pre-bootstrap" \
-   "$HOME/Library/Application Support/Code/User/settings.json"
-```
-
-3. Reload terminal
-
-#### Notes
-- Symlinks are machine-specific and must be created on each machine.
-- Moving the repo requires recreating symlinks (they store the path).
+`bootstrap.sh` backs up any existing dotfiles before creating symlinks. Symlinks store the absolute path — moving the repo requires recreating them. See [docs/setup.md](docs/setup.md) for what the script does and how to roll back.
 
 ---
 
 ## Keeping the Brewfile up to date
 
-The Brewfile is a snapshot of every Homebrew package, cask, and VS Code extension to install on a new machine. It does not update itself automatically when you install something new.
-
-Use `brewi` instead of `brew install` to install a package and update the Brewfile in one step:
+Use `brewi` instead of `brew install` — it installs the package and regenerates the Brewfile in one step:
 
 ```bash
 brewi <package>
 brewi git gh tree   # multiple packages at once
 ```
 
-**What `brewi` does, precisely:**
-1. Runs `brew install` with every argument you pass (multiple packages work correctly)
-2. If and only if the install succeeds, runs `brew bundle dump --file=~/Code/machine-setup/Brewfile --force`
-3. `brew bundle dump --force` **rewrites the entire Brewfile** from scratch based on everything currently installed — not just the package you just added
-
-**Important:** because the dump is a full snapshot, packages you installed casually in the past may appear in the diff. Review `git diff Brewfile` before committing and remove anything you don't want permanently tracked.
-
-**After running `brewi`, commit the updated Brewfile:**
+The dump rewrites the entire Brewfile from scratch, so review `git diff Brewfile` before committing. Then:
 
 ```bash
-cd ~/Code/machine-setup
 git add Brewfile
 git commit -m "chore: add <package> to Brewfile"
 git push
@@ -282,7 +138,7 @@ git push
 
 Notable aliases defined in `.gitconfig`:
 
-- `git done` — after merging a PR, switches to main, pulls, and deletes all merged local branches in one command
+- `git done` — switches to main, pulls, removes agent worktrees, and deletes all merged local branches in one command
 - `git clean-branches` — deletes local branches already merged into the default branch (safe: protects main/master/develop)
 - `git clean-branches-dry` — preview of what `clean-branches` would delete
 - `git clean-remote` — prunes stale remote-tracking branches (`git fetch --prune`)
@@ -294,71 +150,36 @@ Notable aliases defined in `.gitconfig`:
 
 ## Claude Code multi-account
 
-Two aliases in `.zshrc` allow separate personal and work Claude Code sessions. Each points to its own config directory, giving independent auth, history, and usage limits:
+Two aliases in `.zshrc` give separate personal and work sessions with independent auth, history, and usage limits:
 
 ```zsh
 alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
 alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
 ```
 
-`claude` (bare) continues to use `~/.claude` (personal). Run `claude-work` once on a new machine to trigger the auth flow for the work account — it's a one-time step per machine.
+`claude` (bare) uses `~/.claude` (personal). Run `claude-work` once on a new machine to trigger the work account auth flow.
 
 ---
 
 ## Claude plugins
 
-Plugins are installed declaratively via `scripts/install-claude-plugins.sh`. On a new machine, `setup.sh` skips this step because authentication must happen first — **you must run it manually after authenticating both accounts** (see Step 2 above).
-
-The script installs plugins into both the personal (`~/.claude`) and work (`~/.claude-work`) contexts. The personal list (`PERSONAL_PLUGINS` in the script) is the hardcoded source of truth for fresh machines. The work list is derived automatically from whatever is installed in the personal context, minus anything in `PERSONAL_ONLY` — so adding a plugin to personal and re-running syncs it to work with no script edits required.
-
-### Prerequisites
-
-- `jq` must be installed. It is included in the Brewfile and installed automatically by `setup.sh`. If running the script manually on a machine where `setup.sh` has not been run, install it first: `brew install jq`.
-- Both Claude accounts must be authenticated before running. See [Claude Code multi-account](#claude-code-multi-account) and Step 2 above.
-- Personal context must be set up before work. If running contexts separately, always run `--context personal` before `--context work`.
-
-### Adding a new plugin
-
-1. Install it in your personal context as normal.
-2. Sync it to work (use the full path — script is not on `$PATH`):
-   ```bash
-   bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
-   ```
-3. Update `PERSONAL_PLUGINS` in `scripts/install-claude-plugins.sh` so the plugin is included on fresh machine setups.
-4. If the plugin comes from a **new marketplace** (not `claude-plugins-official`, `cc-marketplace`, or `craft`), also add a `claude plugin marketplace add` line to the personal section of the script — and to the work section if it should sync there too.
-
-### Keeping a plugin personal-only
-
-Add its plugin ID to the `PERSONAL_ONLY` array in `scripts/install-claude-plugins.sh`. The work sync will skip it automatically.
-
-`cc-marketplace` plugins (e.g. `safety-net`) are personal-only by default and will never be synced to work.
-
-### Running the script manually
-
-Run using the full path — the script is not on `$PATH`:
+Plugins are installed via `scripts/install-claude-plugins.sh` into both personal and work contexts. Run it manually after authenticating both accounts (see Step 2 above).
 
 ```bash
-# Both contexts (default) — personal must be authenticated before work
-bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
-
-# One context only
+bash ~/Code/machine-setup/scripts/install-claude-plugins.sh            # both contexts
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context personal
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh --context work
 ```
 
-The script is idempotent — safe to re-run on an already-configured machine.
+**Prerequisites:** `jq` must be installed (it's in the Brewfile; if running without `setup.sh`, install it first with `brew install jq`). Always run `--context personal` before `--context work` — the work list is derived from whatever is installed in the personal context.
+
+The script is idempotent — safe to rerun. To add a new plugin: install it in your personal context, sync to work via `--context work`, then add it to `PERSONAL_PLUGINS` in the script so fresh machines get it. Plugins in the `PERSONAL_ONLY` array are never synced to work. If the plugin comes from a marketplace not already registered in the script (`claude-plugins-official`, `cc-marketplace`, `craft`), also add a `claude plugin marketplace add` line to the script for each context that needs it.
 
 ---
 
 ## Machine-local secrets and overrides
 
-`.zshrc` sources `~/.zshrc.local` at startup if the file exists:
-
-```zsh
-[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
-```
-
-This file is not in the repo. Create it manually on each machine and put any secrets or local-only config there:
+`.zshrc` sources `~/.zshrc.local` at startup if it exists. Create it manually on each machine:
 
 ```zsh
 export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_...
