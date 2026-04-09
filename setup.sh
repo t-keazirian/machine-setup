@@ -241,8 +241,20 @@ else
   fi
 fi
 
-# ── 12. Claude Code ───────────────────────────────────────────────────────────
-info "13/14 Claude Code"
+# ── 12. iTerm2 preferences ────────────────────────────────────────────────────
+info "13/15 iTerm2 preferences"
+if [[ -f "$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist" ]]; then
+  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES_DIR/iterm2"
+  defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+  ok "iTerm2 pointed at $DOTFILES_DIR/iterm2 — restart iTerm2 to apply"
+  done_item "iTerm2 preferences configured"
+else
+  warn "iTerm2 plist not found in $DOTFILES_DIR/iterm2 — skipping"
+  manual_item "Copy iTerm2 prefs: defaults export com.googlecode.iterm2 $DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist && plutil -convert xml1 $DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist"
+fi
+
+# ── 13. Claude Code ───────────────────────────────────────────────────────────
+info "14/15 Claude Code"
 if command -v claude &>/dev/null; then
   skip "Claude Code"
 else
@@ -257,7 +269,7 @@ else
 fi
 
 # ── 13. Claude Plugins ────────────────────────────────────────────────────────
-info "14/14 Claude Plugins"
+info "15/15 Claude Plugins"
 warn "Plugin install requires authentication — skipping automatic install."
 manual_item "Authenticate personal account: run 'claude' and follow the login prompt"
 manual_item "Authenticate work account (if applicable): run 'claude-work' and follow the login prompt"
