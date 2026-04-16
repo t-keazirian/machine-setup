@@ -45,3 +45,6 @@ else
   nvm alias default 'lts/*'
   ok "Node LTS installed and set as default"
 fi
+
+echo ""
+echo -e "${BOLD}Node setup complete. Restart your terminal (or run: source ~/.zshrc) to use node.${RESET}"
