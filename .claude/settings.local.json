@@ -33,5 +33,6 @@
       "Bash(plutil -convert xml1 /Users/taylorkeazirian/Code/machine-setup/iterm2/com.googlecode.iterm2.plist)",
       "Bash(defaults write:*)"
     ]
-  }
+  },
+  "outputStyle": "Explanatory"
 }
