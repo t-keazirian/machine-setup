@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOTFILES_DIR="$HOME/Code/machine-setup"
-DOTFILES_REPO="git@github.com:t-keazirian/machine-setup.git"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ── Color helpers ──────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'
@@ -24,7 +23,7 @@ manual_item() { MANUAL+=("$*"); }
 # ── 1. Xcode Command Line Tools ────────────────────────────────────────────────
 # Note: this is Xcode CLT (~500MB), not the full Xcode IDE (~10GB).
 # Required by Homebrew. Provides git, make, clang.
-info "1/5  Xcode Command Line Tools"
+info "1/4  Xcode Command Line Tools"
 if xcode-select -p &>/dev/null; then
   skip "Xcode CLT"
 else
@@ -39,7 +38,7 @@ else
 fi
 
 # ── 2. Homebrew ────────────────────────────────────────────────────────────────
-info "2/5  Homebrew"
+info "2/4  Homebrew"
 if command -v brew &>/dev/null; then
   skip "Homebrew"
 else
@@ -55,20 +54,8 @@ else
   done_item "Homebrew"
 fi
 
-# ── 3. Clone dotfiles ──────────────────────────────────────────────────────────
-info "3/5  Dotfiles repo"
-if [ -d "$DOTFILES_DIR/.git" ]; then
-  skip "Dotfiles repo at $DOTFILES_DIR"
-else
-  warn "Cloning dotfiles..."
-  mkdir -p "$(dirname "$DOTFILES_DIR")"
-  git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
-  ok "Dotfiles cloned to $DOTFILES_DIR"
-  done_item "Dotfiles cloned"
-fi
-
-# ── 4. Homebrew bundle ─────────────────────────────────────────────────────────
-info "4/5  Homebrew bundle"
+# ── 3. Homebrew bundle ─────────────────────────────────────────────────────────
+info "3/4  Homebrew bundle"
 if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
@@ -82,8 +69,8 @@ else
   fi
 fi
 
-# ── 5. Git identity ───────────────────────────────────────────────────────────
-info "5/5  Git identity"
+# ── 4. Git identity ───────────────────────────────────────────────────────────
+info "4/4  Git identity"
 GIT_NAME="$(git config --global user.name 2>/dev/null || true)"
 GIT_EMAIL="$(git config --global user.email 2>/dev/null || true)"
 

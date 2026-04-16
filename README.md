@@ -46,13 +46,12 @@ bash ~/Code/machine-setup/setup.sh
 
 ## What setup.sh does
 
-Five steps, all idempotent (safe to re-run):
+Four steps, all idempotent (safe to re-run):
 
 1. Xcode Command Line Tools
 2. Homebrew
-3. Clone this repo to `~/Code/machine-setup`
-4. Install packages from `Brewfile`
-5. Prompt for your git identity (name and email)
+3. Install packages from `Brewfile`
+4. Prompt for your git identity (name and email)
 
 After these complete, pick the optional modules you want. Once you're done, you can delete `~/Code/machine-setup` — nothing depends on it after setup.
 
