@@ -8,17 +8,24 @@ export ZSH="$HOME/.oh-my-zsh"
 # Use zsh's path array with automatic de-dupe.
 typeset -U path PATH
 
-# Core paths (Apple Silicon Homebrew first)
-path=(/opt/homebrew/sbin /opt/homebrew/bin $path)
+# Homebrew prefix — /opt/homebrew on Apple Silicon, /usr/local on Intel
+if [[ $(uname -m) == "arm64" ]]; then
+  BREW_PREFIX=/opt/homebrew
+else
+  BREW_PREFIX=/usr/local
+fi
+
+# Core paths
+path=("$BREW_PREFIX/sbin" "$BREW_PREFIX/bin" $path)
 
 # Extra tools
-path=(/opt/homebrew/opt/vim/bin /opt/homebrew/opt/python@3.13/bin $path)
+path=("$BREW_PREFIX/opt/vim/bin" "$BREW_PREFIX/opt/python@3.13/bin" $path)
 
 # JetBrains Toolbox shell scripts (idea, webstorm, etc.)
 path=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 
 # MySQL client
-path=(/opt/homebrew/opt/mysql@8.0/bin $path)
+path=("$BREW_PREFIX/opt/mysql@8.0/bin" $path)
 
 # --- Completions BEFORE OMZ so compinit sees them ---
 fpath=(~/.zsh/completions $fpath)
@@ -122,10 +129,7 @@ alias openv="vim ~/.vimrc"
 alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
-alias python='/opt/homebrew/opt/python@3.13/bin/python3'
-# Claude Code multi-account
-alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
-alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
+alias python="$BREW_PREFIX/opt/python@3.13/bin/python3"
 
 # kubectl alias + completion
 alias k=kubectl

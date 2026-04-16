@@ -4,9 +4,19 @@ A minimal Mac developer setup. Installs core tools via Homebrew and gives you a 
 
 ---
 
-## Quick start
+## SSH key setup
 
-> **Prerequisite:** `setup.sh` clones this repo via SSH in step 3. If you haven't set up SSH keys with GitHub yet, [do that first](#ssh-key-setup).
+`setup.sh` clones this repo via SSH. Set up SSH keys with GitHub before running it:
+
+```bash
+ssh-keygen -t ed25519 -C "your@email.com"
+cat ~/.ssh/id_ed25519.pub
+# Copy the output and add it to https://github.com/settings/keys
+```
+
+---
+
+## Quick start
 
 Run from anywhere — `~` is fine:
 
@@ -60,8 +70,7 @@ The repo includes reference configs you can use as a starting point:
 
 | File | Purpose |
 |------|---------|
-| `.zshrc` | Zsh config (Apple Silicon) |
-| `.zshrc-intel` | Zsh config (Intel Mac) |
+| `.zshrc` | Zsh config (auto-detects Apple Silicon or Intel) |
 | `.vimrc` | Vim config with vim-plug |
 | `.gitignore-global` | Global git ignores |
 
@@ -93,44 +102,44 @@ To add a package and track it:
 
 ```bash
 brew install <package>
-# Then add it to Brewfile manually and commit
+# Then add it to your Brewfile to track it
 ```
 
 ---
 
 ## Git aliases
 
-Some useful git aliases worth adding to your `~/.gitconfig`:
+Add any of these to the `[alias]` section of your `~/.gitconfig`:
 
-- `git done` — switches to main, pulls, and deletes all merged local branches
-- `git clean-branches` — deletes local branches already merged into the default branch
-- `git clean-branches-dry` — preview of what `clean-branches` would delete
-- `git clean-remote` — prunes stale remote-tracking branches
-- `git lg` — compact graph log
-- `git st` — short status
-- `git wc` / `git wcd` — "what changed" log (summary / detailed)
-
----
-
-## Machine-local overrides
-
-`.zshrc` sources `~/.zshrc.local` at startup if it exists. Create it manually on each machine for secrets and machine-specific config:
-
-```zsh
-export GITHUB_TOKEN=ghp_...
-export SOME_OTHER_SECRET=...
+```ini
+[alias]
+    st = status -sb
+    lg = log --oneline --graph --decorate --all
+    co = checkout
+    sw = switch
+    wc  = log --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]" --name-status
+    wcd = log -p --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]"
+    aa  = add -A
+    c   = commit -v
+    cm  = commit -m
+    clean-branches-dry = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        echo \"[base=$base] would delete:\"; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\"; \
+        }; f"
+    clean-branches = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\" \
+        | while IFS= read -r b; do \
+        [ -n \"$b\" ] && echo \"Deleting $b\" && git branch -D \"$b\"; \
+        done; \
+        }; f"
+    clean-remote = "!git fetch --prune origin"
+    done = "!git checkout main && git pull && git clean-branches"
 ```
 
-**Never put tokens or credentials in `.zshrc`** — it is tracked by Git.
-
----
-
-## SSH key setup
-
-If you need to generate SSH keys before running `setup.sh`:
-
-```bash
-ssh-keygen -t ed25519 -C "your@email.com"
-cat ~/.ssh/id_ed25519.pub
-# Copy the output and add it to https://github.com/settings/keys
-```
+`git done` requires `clean-branches`. `clean-branches` uses `-D` (force delete) to handle squash-merged branches that `--merged` doesn't catch.
