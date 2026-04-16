@@ -26,7 +26,7 @@ else
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
     ok "vim-plug installed"
   else
-    echo -e "${YELLOW}  ⚠ Failed to install vim-plug.${RESET}"
+    warn "Failed to install vim-plug."
     exit 1
   fi
 fi
