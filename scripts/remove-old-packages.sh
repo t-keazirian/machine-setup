@@ -61,15 +61,17 @@ brew_remove openjdk
 brew_remove pandoc
 brew_remove ruby
 brew_remove swagger-codegen
-brew_remove "hashicorp/tap/vault"
+brew_remove "vault"
 
 # ── Homebrew taps ──────────────────────────────────────────────────────────────
 info "Removing Homebrew taps"
-if brew tap | grep -q "^hashicorp/tap$"; then
-  brew untap hashicorp/tap &>/dev/null && ok "hashicorp/tap" || warn "hashicorp/tap"
-else
-  skip "hashicorp/tap"
-fi
+for tap in hashicorp/tap sdkman/tap; do
+  if brew tap | grep -q "^${tap}$"; then
+    brew untap "$tap" &>/dev/null && ok "$tap" || warn "$tap"
+  else
+    skip "$tap"
+  fi
+done
 
 # ── Casks ──────────────────────────────────────────────────────────────────────
 info "Removing casks"
@@ -170,5 +172,9 @@ else
   vscode_remove yzane.markdown-pdf
   vscode_remove zhuangtongfa.material-theme
 fi
+
+# ── Orphaned dependencies ──────────────────────────────────────────────────────
+info "Removing orphaned dependencies"
+brew autoremove
 
 echo -e "\n${BOLD}Done.${RESET}"
