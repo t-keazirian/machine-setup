@@ -23,3 +23,47 @@ To see all available versions first:
 ```bash
 sdk list java
 ```
+
+---
+
+## Maven
+
+```bash
+brew install maven maven-completion
+```
+
+---
+
+## Kafka + kcat
+
+```bash
+brew install kafka kcat
+```
+
+---
+
+## Kubernetes tools
+
+```bash
+brew install kubernetes-cli kubectx k9s
+```
+
+---
+
+## direnv (per-directory environment variables)
+
+```bash
+brew install direnv
+```
+
+Then add the following to `~/.zshrc.local`:
+
+```zsh
+eval "$(direnv hook zsh)"
+```
+
+---
+
+## VS Code extensions
+
+See [vscode-extensions.md](vscode-extensions.md) for a curated list of extensions to install manually.
