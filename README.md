@@ -1,12 +1,12 @@
 # machine-setup
 
-A minimal Mac developer setup. Installs core tools via Homebrew and gives you a clean starting point for dotfiles and shell config.
+A minimal Mac developer setup for Apple Silicon and Intel. Gets your machine running with core tools and a clean shell config.
 
 ---
 
 ## SSH key setup
 
-`setup.sh` clones this repo via SSH. Set up SSH keys with GitHub before running it:
+`setup.sh` clones this repo via SSH. If you haven't set up SSH keys with GitHub yet, do that first:
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
@@ -31,7 +31,7 @@ git clone git@github.com:t-keazirian/machine-setup.git ~/Code/machine-setup
 bash ~/Code/machine-setup/setup.sh
 ```
 
-> **Xcode CLT vs Xcode:** Step 1 installs Xcode Command Line Tools (~500MB) — not the full Xcode IDE (~10GB). CLT provides `git`, `make`, and `clang`, and is required by Homebrew.
+> **Xcode CLT vs Xcode:** Step 1 installs Xcode Command Line Tools (~500MB), not the full Xcode IDE (~10GB). CLT gives you `git`, `make`, and `clang` — enough to run Homebrew.
 
 ---
 
@@ -45,7 +45,7 @@ Five steps, all idempotent (safe to re-run):
 4. Install packages from `Brewfile`
 5. Prompt for your git identity (name and email)
 
-After these complete, pick the optional modules you want.
+After these complete, pick the optional modules you want. Once you're done, you can delete `~/Code/machine-setup` — nothing depends on it after setup.
 
 ---
 
@@ -64,23 +64,7 @@ All modules are idempotent — safe to re-run.
 
 ## Dotfiles
 
-The repo includes reference configs you can use as a starting point:
-
-| File | Purpose |
-|------|---------|
-| `.zshrc` | Zsh config (auto-detects Apple Silicon or Intel) |
-
-**Review these files before using them** — they reflect a specific personal setup. Remove or adapt anything that doesn't apply to you.
-
-To symlink them into your home directory:
-
-```bash
-ln -sf ~/Code/machine-setup/.zshrc ~/.zshrc
-ln -sf ~/Code/machine-setup/.vimrc ~/.vimrc
-ln -sf ~/Code/machine-setup/.gitignore-global ~/.gitignore-global
-```
-
-Symlinking means edits in this repo take effect immediately. If you'd rather copy and customize independently:
+The repo includes a starter `.zshrc` — Homebrew paths, NVM, Oh My Zsh wired up, and a few common aliases. Copy it and adapt it to your setup:
 
 ```bash
 cp ~/Code/machine-setup/.zshrc ~/.zshrc
@@ -134,7 +118,3 @@ Add any of these to the `[alias]` section of your `~/.gitconfig`.
 ```
 
 `git done` requires `clean-branches`. `clean-branches` uses `-D` (force delete) to handle squash-merged branches that `--merged` doesn't catch.
-
----
-
-Once setup is complete and you've copied the dotfiles you want, you can delete `~/Code/machine-setup` — nothing depends on it after setup.
