@@ -33,6 +33,8 @@ plugins=(
   git
   zsh-autosuggestions
   zsh-syntax-highlighting
+  colorize
+  jsontools
   web-search
   history
   macos
