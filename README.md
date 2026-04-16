@@ -6,7 +6,14 @@ A minimal Mac developer setup for Apple Silicon and Intel. Gets your machine run
 
 ## SSH key setup
 
-`setup.sh` clones this repo via SSH. If you haven't set up SSH keys with GitHub yet, do that first:
+`setup.sh` clones this repo via SSH. Check if you already have a key:
+
+```bash
+ssh -T git@github.com
+# "Hi username! You've successfully authenticated..." means you're good.
+```
+
+If that fails, generate one:
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
@@ -17,14 +24,6 @@ cat ~/.ssh/id_ed25519.pub
 ---
 
 ## Quick start
-
-Run from anywhere — `~` is fine:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/machine-setup/main/setup.sh)
-```
-
-Or clone first and run locally:
 
 ```bash
 git clone git@github.com:t-keazirian/machine-setup.git ~/Code/machine-setup
