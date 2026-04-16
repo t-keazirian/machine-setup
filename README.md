@@ -1,54 +1,68 @@
-# machine-setup
+# Machine Setup
 
-A minimal Mac developer setup. Installs core tools via Homebrew and gives you a clean starting point for dotfiles and shell config.
+A minimal Mac developer setup for Apple Silicon and Intel. Gets your machine running with core tools and a clean shell config.
 
 ---
 
 ## Quick start
 
-> **Prerequisite:** `setup.sh` clones this repo via SSH in step 3. If you haven't set up SSH keys with GitHub yet, [do that first](#ssh-key-setup).
-
-Run from anywhere — `~` is fine:
+**Step 0 — fresh Mac only:** If you don't have git yet, install Xcode Command Line Tools first:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/machine-setup/main/setup.sh)
+xcode-select --install
 ```
 
-Or clone first and run locally:
+Not sure? Run `git --version`. If it returns a version number, skip this.
+
+**Step 1 — clone and run:**
 
 ```bash
-git clone git@github.com:t-keazirian/machine-setup.git ~/Code/machine-setup
+git clone https://github.com/t-keazirian/machine-setup.git ~/Code/machine-setup
 bash ~/Code/machine-setup/setup.sh
 ```
 
-> **Xcode CLT vs Xcode:** Step 1 installs Xcode Command Line Tools (~500MB) — not the full Xcode IDE (~10GB). CLT provides `git`, `make`, and `clang`, and is required by Homebrew.
+> **Xcode CLT vs Xcode:** `setup.sh` installs Xcode Command Line Tools (~500MB), not the full Xcode IDE (~10GB). CLT gives you `git`, `make`, and `clang` — enough to run Homebrew.
 
 ---
 
 ## What setup.sh does
 
-Five steps, all idempotent (safe to re-run):
+Four steps, all idempotent (safe to re-run):
 
 1. Xcode Command Line Tools
 2. Homebrew
-3. Clone this repo to `~/Code/machine-setup`
-4. Install packages from `Brewfile`
-5. Prompt for your git identity (name and email)
+3. Install packages from `Brewfile` — see below for what's included
+4. Prompt for your git identity (name and email)
 
-After these complete, pick the optional modules you want.
+After these complete, `setup.sh` prints the commands for any optional modules you want to run. Once you're done, you can delete the repo — nothing depends on it after setup.
+
+---
+
+## What's in the Brewfile
+
+| Package | Type | What it is |
+|---------|------|------------|
+| `iterm2` | App | Terminal emulator (replace with Warp, Ghostty, etc. if you prefer) |
+| `git` | CLI | Version control |
+| `gh` | CLI | GitHub CLI |
+| `vim` | CLI | Text editor |
+| `xcodes` | CLI | Xcode version manager |
+| `nvm` | CLI | Node version manager |
+| `tree` | CLI | Directory tree viewer |
+| `openssl@3`, `coreutils`, `bash-completion@2`, `zsh`, `zsh-completions` | CLI | Shell and system utilities |
+
+Open `Brewfile` in any text editor, delete the lines you don't want, then run `setup.sh`.
 
 ---
 
 ## Optional modules
 
-Run any of these after `setup.sh`:
+Run any of these after `setup.sh`. The exact commands for your install location are printed when `setup.sh` finishes.
 
-| Module | What it installs | Command |
-|--------|-----------------|---------|
-| `modules/zsh.sh` | Oh My Zsh, zsh-autosuggestions, zsh-syntax-highlighting | `bash ~/Code/machine-setup/modules/zsh.sh` |
-| `modules/node.sh` | NVM + Node LTS (set as default) | `bash ~/Code/machine-setup/modules/node.sh` |
-| `modules/vim.sh` | vim-plug + Vim plugins from .vimrc | `bash ~/Code/machine-setup/modules/vim.sh` |
-| `modules/java.sh` | maven-bash-completion for zsh | `bash ~/Code/machine-setup/modules/java.sh` |
+| Module | What it installs |
+|--------|-----------------|
+| `modules/zsh.sh` | Oh My Zsh, zsh-autosuggestions, zsh-syntax-highlighting |
+| `modules/node.sh` | NVM + Node LTS (set as default) |
 
 All modules are idempotent — safe to re-run.
 
@@ -56,29 +70,29 @@ All modules are idempotent — safe to re-run.
 
 ## Dotfiles
 
-The repo includes reference configs you can use as a starting point:
-
-| File | Purpose |
-|------|---------|
-| `.zshrc` | Zsh config (Apple Silicon) |
-| `.zshrc-intel` | Zsh config (Intel Mac) |
-| `.vimrc` | Vim config with vim-plug |
-| `.gitignore-global` | Global git ignores |
-
-**Review these files before using them** — they reflect a specific personal setup. Remove or adapt anything that doesn't apply to you.
-
-To symlink them into your home directory:
-
-```bash
-ln -sf ~/Code/machine-setup/.zshrc ~/.zshrc
-ln -sf ~/Code/machine-setup/.vimrc ~/.vimrc
-ln -sf ~/Code/machine-setup/.gitignore-global ~/.gitignore-global
-```
-
-Symlinking means edits in this repo take effect immediately. If you'd rather copy and customize independently:
+The repo includes a starter `.zshrc` — Homebrew paths, NVM, Oh My Zsh wired up, and a few common aliases. Copy it and adapt it to your setup:
 
 ```bash
 cp ~/Code/machine-setup/.zshrc ~/.zshrc
+```
+
+---
+
+## SSH keys
+
+You'll want SSH keys set up for GitHub — for pushing code and accessing private repos. Check if you already have one:
+
+```bash
+ssh -T git@github.com
+# "Hi username! You've successfully authenticated..." means you're good.
+```
+
+If not, generate one:
+
+```bash
+ssh-keygen -t ed25519 -C "your@email.com"
+cat ~/.ssh/id_ed25519.pub
+# Copy the output and add it to https://github.com/settings/keys
 ```
 
 ---
@@ -89,48 +103,43 @@ cp ~/Code/machine-setup/.zshrc ~/.zshrc
 brew update && brew upgrade && brew cleanup
 ```
 
-To add a package and track it:
-
-```bash
-brew install <package>
-# Then add it to Brewfile manually and commit
-```
-
 ---
 
 ## Git aliases
 
-Some useful git aliases worth adding to your `~/.gitconfig`:
+Add any of these to the `[alias]` section of your `~/.gitconfig`.
 
-- `git done` — switches to main, pulls, and deletes all merged local branches
-- `git clean-branches` — deletes local branches already merged into the default branch
-- `git clean-branches-dry` — preview of what `clean-branches` would delete
-- `git clean-remote` — prunes stale remote-tracking branches
-- `git lg` — compact graph log
-- `git st` — short status
-- `git wc` / `git wcd` — "what changed" log (summary / detailed)
+> **Warning:** `clean-branches` and `done` permanently delete local branches. Review them before adding.
 
----
-
-## Machine-local overrides
-
-`.zshrc` sources `~/.zshrc.local` at startup if it exists. Create it manually on each machine for secrets and machine-specific config:
-
-```zsh
-export GITHUB_TOKEN=ghp_...
-export SOME_OTHER_SECRET=...
+```ini
+[alias]
+    st = status -sb
+    lg = log --oneline --graph --decorate --all
+    co = checkout
+    sw = switch
+    wc  = log --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]" --name-status
+    wcd = log -p --pretty=format:"%C(yellow)%h%Creset %s %Cgreen(%cr) %Cblue[%an]"
+    aa  = add -A
+    c   = commit -v
+    cm  = commit -m
+    clean-branches-dry = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        echo \"[base=$base] would delete:\"; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\"; \
+        }; f"
+    clean-branches = "!f() { \
+        base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##'); \
+        base=${base:-main}; \
+        git for-each-ref --format='%(refname:short)' --merged origin/$base refs/heads \
+        | grep -vE \"\\b$base$|\\bmain$|\\bmaster$|\\bdevelop$\" \
+        | while IFS= read -r b; do \
+        [ -n \"$b\" ] && echo \"Deleting $b\" && git branch -D \"$b\"; \
+        done; \
+        }; f"
+    clean-remote = "!git fetch --prune origin"
+    done = "!git checkout main && git pull && git clean-branches"
 ```
 
-**Never put tokens or credentials in `.zshrc`** — it is tracked by Git.
-
----
-
-## SSH key setup
-
-If you need to generate SSH keys before running `setup.sh`:
-
-```bash
-ssh-keygen -t ed25519 -C "your@email.com"
-cat ~/.ssh/id_ed25519.pub
-# Copy the output and add it to https://github.com/settings/keys
-```
+`git done` requires `clean-branches`. `clean-branches` uses `-D` (force delete) to handle squash-merged branches that `--merged` doesn't catch.
