@@ -1,4 +1,4 @@
-# machine-setup
+# Machine Setup
 
 A minimal Mac developer setup for Apple Silicon and Intel. Gets your machine running with core tools and a clean shell config.
 
