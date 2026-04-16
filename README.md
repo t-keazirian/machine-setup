@@ -57,8 +57,6 @@ Run any of these after `setup.sh`:
 |--------|-----------------|---------|
 | `modules/zsh.sh` | Oh My Zsh, zsh-autosuggestions, zsh-syntax-highlighting | `bash ~/Code/machine-setup/modules/zsh.sh` |
 | `modules/node.sh` | NVM + Node LTS (set as default) | `bash ~/Code/machine-setup/modules/node.sh` |
-| `modules/vim.sh` | vim-plug + Vim plugins from .vimrc | `bash ~/Code/machine-setup/modules/vim.sh` |
-| `modules/java.sh` | maven-bash-completion for zsh | `bash ~/Code/machine-setup/modules/java.sh` |
 
 All modules are idempotent — safe to re-run.
 
@@ -71,8 +69,6 @@ The repo includes reference configs you can use as a starting point:
 | File | Purpose |
 |------|---------|
 | `.zshrc` | Zsh config (auto-detects Apple Silicon or Intel) |
-| `.vimrc` | Vim config with vim-plug |
-| `.gitignore-global` | Global git ignores |
 
 **Review these files before using them** — they reflect a specific personal setup. Remove or adapt anything that doesn't apply to you.
 
@@ -102,7 +98,9 @@ brew update && brew upgrade && brew cleanup
 
 ## Git aliases
 
-Add any of these to the `[alias]` section of your `~/.gitconfig`:
+Add any of these to the `[alias]` section of your `~/.gitconfig`.
+
+> **Warning:** `clean-branches` and `done` permanently delete local branches. Review them before adding.
 
 ```ini
 [alias]
@@ -136,3 +134,7 @@ Add any of these to the `[alias]` section of your `~/.gitconfig`:
 ```
 
 `git done` requires `clean-branches`. `clean-branches` uses `-D` (force delete) to handle squash-merged branches that `--merged` doesn't catch.
+
+---
+
+Once setup is complete and you've copied the dotfiles you want, you can delete `~/Code/machine-setup` — nothing depends on it after setup.
