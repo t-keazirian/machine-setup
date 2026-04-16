@@ -45,3 +45,6 @@ if vim +PlugInstall +qall 2>/dev/null; then
 else
   warn "Vim plugin install had errors (may be fine — check manually with :PlugInstall)"
 fi
+
+echo ""
+echo -e "${BOLD}Vim setup complete. Restart your terminal (or open a new Vim session) to use plugins.${RESET}"
