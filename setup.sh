@@ -207,8 +207,7 @@ SCRIPTS_SRC="$DOTFILES_DIR/scripts"
 chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
          "$SCRIPTS_SRC"/brew-maintenance-simple.sh \
          "$SCRIPTS_SRC"/git-pull-all \
-         "$SCRIPTS_SRC"/who-is-listening \
-         "$SCRIPTS_SRC"/remove-old-packages.sh
+         "$SCRIPTS_SRC"/who-is-listening
 ok "scripts/ is executable (on PATH via .zshrc)"
 
 # ── 11. ~/.zsh/completions (maven-bash-completion) ────────────────────────────
