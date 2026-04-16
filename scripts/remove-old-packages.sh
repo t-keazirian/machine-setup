@@ -16,7 +16,7 @@ warn() { echo -e "  ${YELLOW}⚠${RESET} failed to remove $*"; }
 
 brew_remove() {
   local pkg="$1"
-  if brew list --formula 2>/dev/null | grep -q "^${pkg}$"; then
+  if brew list --formula -1 2>/dev/null | grep -q "^${pkg}$"; then
     brew uninstall --ignore-dependencies "$pkg" &>/dev/null && ok "$pkg" || warn "$pkg"
   else
     skip "$pkg"
@@ -25,7 +25,7 @@ brew_remove() {
 
 cask_remove() {
   local pkg="$1"
-  if brew list --cask 2>/dev/null | grep -q "^${pkg}$"; then
+  if brew list --cask -1 2>/dev/null | grep -q "^${pkg}$"; then
     brew uninstall --cask "$pkg" &>/dev/null && ok "$pkg" || warn "$pkg"
   else
     skip "$pkg"
