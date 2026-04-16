@@ -28,3 +28,6 @@ else
     exit 1
   fi
 fi
+
+echo ""
+echo -e "${BOLD}Restart your terminal (or run: source ~/.zshrc) to activate completions.${RESET}"
