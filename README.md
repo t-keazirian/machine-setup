@@ -6,6 +6,8 @@ A minimal Mac developer setup. Installs core tools via Homebrew and gives you a 
 
 ## Quick start
 
+> **Prerequisite:** `setup.sh` clones this repo via SSH in step 3. If you haven't set up SSH keys with GitHub yet, [do that first](#ssh-key-setup).
+
 Run from anywhere — `~` is fine:
 
 ```bash
@@ -18,8 +20,6 @@ Or clone first and run locally:
 git clone git@github.com:t-keazirian/machine-setup.git ~/Code/machine-setup
 bash ~/Code/machine-setup/setup.sh
 ```
-
-> **SSH keys required:** `setup.sh` clones this repo via SSH in step 3. Make sure your SSH key is registered with GitHub before running. See [SSH key setup](#ssh-key-setup) below if needed.
 
 > **Xcode CLT vs Xcode:** Step 1 installs Xcode Command Line Tools (~500MB) — not the full Xcode IDE (~10GB). CLT provides `git`, `make`, and `clang`, and is required by Homebrew.
 
@@ -100,7 +100,7 @@ brew install <package>
 
 ## Git aliases
 
-Notable aliases in `.gitconfig` (if you use it as a reference):
+Some useful git aliases worth adding to your `~/.gitconfig`:
 
 - `git done` — switches to main, pulls, and deletes all merged local branches
 - `git clean-branches` — deletes local branches already merged into the default branch
