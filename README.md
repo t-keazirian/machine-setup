@@ -10,10 +10,10 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 - `~/.zshrc.local` — machine-local overrides and secrets; sourced by `.zshrc` at startup; **not tracked** (create manually on each machine)
 - `.vimrc` — symlinked to `~/.vimrc`; uses [vim-plug](https://github.com/junegunn/vim-plug) for plugin management
 - `.ideavimrc` — symlinked to `~/.ideavimrc`; IdeaVim config for WebStorm; see [docs/ideavim.md](docs/ideavim.md)
-- `vscode-settings.json` — symlinked to `~/Library/Application Support/Code/User/settings.json`; see [docs/vscode.md](docs/vscode.md)
+- `vscode-settings.json` — symlinked to `~/Library/Application Support/Code/User/settings.json` (only takes effect if VS Code is installed manually); see [docs/vscode.md](docs/vscode.md)
 - `.gitconfig` — symlinked to `~/.gitconfig`; Git identity (name and email) goes in `~/.gitconfig.local` (not tracked); `setup.sh` prompts for these on first run
 - `.gitignore-global` — symlinked to `~/.gitignore-global`
-- `Brewfile` — all Homebrew formulae, casks, and VS Code extensions
+- `Brewfile` — all Homebrew formulae and casks
 - `scripts/` — utility scripts, on PATH via `.zshrc`
 - `setup.sh` — full setup for a new machine
 - `bootstrap.sh` — symlinks only; useful when repo is already cloned
@@ -98,9 +98,15 @@ git clone git@github.com:t-keazirian/machine-setup-private.git ~/Code/machine-se
 cd ~/Code/machine-setup-private && chmod +x bootstrap.sh && ./bootstrap.sh
 ```
 
-> **Not automated:** JetBrains settings (use JetBrains Toolbox's built-in sync), macOS System Preferences (Dock, keyboard, trackpad), and Docker Desktop (not in the Brewfile — install manually and sign in with your work account). iTerm2 is the exception: it's installed via the Brewfile and `setup.sh` points it at the tracked plist automatically. Restart iTerm2 after setup to pick up the preferences.
+> **Not automated:** macOS System Preferences (Dock, keyboard, trackpad), Docker Desktop (not in the Brewfile — install manually), and VS Code (install manually from https://code.visualstudio.com — the settings symlink will take effect once it's installed). iTerm2 is the exception: it's installed via the Brewfile and `setup.sh` points it at the tracked plist automatically. Restart iTerm2 after setup to pick up the preferences.
 
 For tools that aren't needed on every machine (like SDKMAN for Java version management), see [docs/optional-installs.md](docs/optional-installs.md).
+
+> **Troubleshooting — pre-existing installs:** On machines where tools were installed directly before Homebrew, `brew bundle` may fail to symlink a formula because a conflicting binary already exists at `/usr/local/bin/<tool>`. Fix it with:
+> ```bash
+> brew link --overwrite <formula>
+> ```
+> Then rerun `setup.sh` — it will skip everything already done.
 
 ---
 
