@@ -23,7 +23,7 @@ done_item()   { DONE+=("$*"); }
 manual_item() { MANUAL+=("$*"); }
 
 # ── 1. Xcode Command Line Tools ────────────────────────────────────────────────
-info "1/12  Xcode Command Line Tools"
+info "1/14  Xcode Command Line Tools"
 if xcode-select -p &>/dev/null; then
   skip "Xcode CLT"
 else
@@ -38,7 +38,7 @@ else
 fi
 
 # ── 2. Homebrew ────────────────────────────────────────────────────────────────
-info "2/12  Homebrew"
+info "2/14  Homebrew"
 if command -v brew &>/dev/null; then
   skip "Homebrew"
 else
@@ -55,7 +55,7 @@ else
 fi
 
 # ── 3. Clone dotfiles ──────────────────────────────────────────────────────────
-info "3/12  Dotfiles repo"
+info "3/14  Dotfiles repo"
 if [ -d "$DOTFILES_DIR/.git" ]; then
   skip "Dotfiles repo at $DOTFILES_DIR"
 else
@@ -67,7 +67,7 @@ else
 fi
 
 # ── 4. Homebrew bundle ─────────────────────────────────────────────────────────
-info "4/12  Homebrew bundle"
+info "4/14  Homebrew bundle"
 if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
@@ -82,7 +82,7 @@ else
 fi
 
 # ── 5. Oh My Zsh ──────────────────────────────────────────────────────────────
-info "5/12  Oh My Zsh"
+info "5/14  Oh My Zsh"
 if [ -d "$HOME/.oh-my-zsh" ]; then
   skip "Oh My Zsh"
 else
@@ -111,12 +111,12 @@ else
 fi
 
 # ── 6. Dotfile symlinks (bootstrap.sh) ────────────────────────────────────────
-info "6/12  Dotfile symlinks"
+info "6/14  Dotfile symlinks"
 bash "$DOTFILES_DIR/bootstrap.sh"
 done_item "Dotfile symlinks created"
 
 # ── 7. Git identity ───────────────────────────────────────────────────────────
-info "7/12  Git identity"
+info "7/14  Git identity"
 GIT_NAME="$(git config --global user.name 2>/dev/null || true)"
 GIT_EMAIL="$(git config --global user.email 2>/dev/null || true)"
 
@@ -134,7 +134,7 @@ else
 fi
 
 # ── 8. NVM + Node (LTS) ───────────────────────────────────────────────────────
-info "8/12  NVM + Node LTS"
+info "8/14  NVM + Node LTS"
 export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
 
@@ -167,20 +167,8 @@ else
   manual_item "Install Node: source $NVM_SH && nvm install --lts && nvm alias default 'lts/*'"
 fi
 
-# ── 8. SDKMAN ─────────────────────────────────────────────────────────────────
-info "9/12  SDKMAN"
-if [ -d "$HOME/.sdkman" ]; then
-  skip "SDKMAN"
-else
-  warn "Installing SDKMAN..."
-  curl -s "https://get.sdkman.io" | bash
-  ok "SDKMAN installed"
-  done_item "SDKMAN"
-fi
-manual_item "Open a new terminal and run: sdk install java"
-
 # ── 9. vim-plug + Vim plugins ─────────────────────────────────────────────────
-info "10/12 vim-plug + Vim plugins"
+info "9/14  vim-plug + Vim plugins"
 PLUG_FILE="$HOME/.vim/autoload/plug.vim"
 mkdir -p "$HOME/.vim/undodir"
 
@@ -213,7 +201,7 @@ else
 fi
 
 # ── 10. scripts/ permissions ──────────────────────────────────────────────────
-info "11/12 scripts/ permissions"
+info "10/14 scripts/ permissions"
 SCRIPTS_SRC="$DOTFILES_DIR/scripts"
 
 chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
@@ -223,7 +211,7 @@ chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
 ok "scripts/ is executable (on PATH via .zshrc)"
 
 # ── 11. ~/.zsh/completions (maven-bash-completion) ────────────────────────────
-info "12/12 zsh completions"
+info "11/14 zsh completions"
 ZSH_COMPLETIONS_DIR="$HOME/.zsh/completions"
 mkdir -p "$ZSH_COMPLETIONS_DIR"
 
@@ -242,7 +230,7 @@ else
 fi
 
 # ── 12. iTerm2 preferences ────────────────────────────────────────────────────
-info "13/15 iTerm2 preferences"
+info "12/14 iTerm2 preferences"
 if [[ -f "$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist" ]]; then
   defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES_DIR/iterm2"
   defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
@@ -254,7 +242,7 @@ else
 fi
 
 # ── 13. Claude Code ───────────────────────────────────────────────────────────
-info "14/15 Claude Code"
+info "13/14 Claude Code"
 if command -v claude &>/dev/null; then
   skip "Claude Code"
 else
@@ -268,8 +256,8 @@ else
   fi
 fi
 
-# ── 13. Claude Plugins ────────────────────────────────────────────────────────
-info "15/15 Claude Plugins"
+# ── 14. Claude Plugins ────────────────────────────────────────────────────────
+info "14/14 Claude Plugins"
 warn "Plugin install requires authentication — skipping automatic install."
 manual_item "Authenticate personal account: run 'claude' and follow the login prompt"
 manual_item "Authenticate work account (if applicable): run 'claude-work' and follow the login prompt"

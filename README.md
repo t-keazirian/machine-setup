@@ -18,7 +18,7 @@ This repo is the single source of truth for my shell, Vim, Git configuration, sc
 - `setup.sh` — full setup for a new machine
 - `bootstrap.sh` — symlinks only; useful when repo is already cloned
 
-Because each file is symlinked (not copied), edits made directly to files in this repo are automatically tracked by Git.
+Because each file is symlinked rather than copied, edits to files in this repo are automatically tracked by Git.
 
 ---
 
@@ -35,9 +35,7 @@ Because each file is symlinked (not copied), edits made directly to files in thi
 
 ## New machine setup
 
-> **Requirements:** Apple Silicon or Intel Mac. SSH keys must exist and be registered with GitHub before running.
->
-> **Convention:** Repos live in `~/Code/`. The setup script creates `~/Code/` if it doesn't exist and clones this repo to `~/Code/machine-setup`.
+> **Requirements:** Apple Silicon or Intel Mac. SSH keys must exist and be registered with GitHub before running `setup.sh` (it clones this repo via SSH in step 3).
 
 ### Step 0 — Generate SSH keys (if needed)
 
@@ -49,11 +47,26 @@ cat ~/.ssh/id_ed25519.pub
 
 ### Step 1 — Run setup
 
+Run this from anywhere — `~` is fine. The script doesn't use your current directory.
+
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/t-keazirian/machine-setup/main/setup.sh)
 ```
 
-To review before running:
+What this does: `curl` downloads `setup.sh` and pipes it directly to `bash` — nothing is written to disk yet. The script then takes over and runs everything in order:
+
+1. Installs Xcode Command Line Tools (if needed)
+2. Installs Homebrew (if needed)
+3. Clones this repo to `~/Code/machine-setup`
+4. Runs `brew bundle` to install everything in the Brewfile (including iTerm2)
+5. Installs Oh My Zsh and zsh plugins
+6. Creates dotfile symlinks via `bootstrap.sh`
+7. Prompts for your Git identity
+8. Installs Node LTS via NVM
+9. Installs vim-plug and Vim plugins
+10. Installs Claude Code
+
+If you'd rather review the script before running it:
 
 ```bash
 git clone https://github.com/t-keazirian/machine-setup.git ~/Code/machine-setup
@@ -65,33 +78,29 @@ bash ~/Code/machine-setup/setup.sh
 
 Restart your terminal, or run `source ~/.zshrc`. Then complete these manual steps in order:
 
-**1. Install a Java version via SDKMAN** (open a new terminal first):
-
-```bash
-sdk install java
-```
-
-**2. Authenticate Claude Code:**
+**1. Authenticate Claude Code:**
 
 ```bash
 claude        # personal account
 claude-work   # work account (if applicable)
 ```
 
-**3. Install Claude plugins** (requires both accounts authenticated):
+**2. Install Claude plugins** (requires both accounts authenticated):
 
 ```bash
 bash ~/Code/machine-setup/scripts/install-claude-plugins.sh
 ```
 
-**4. Set up private config:**
+**3. Set up private config:**
 
 ```bash
 git clone git@github.com:t-keazirian/machine-setup-private.git ~/Code/machine-setup-private
 cd ~/Code/machine-setup-private && chmod +x bootstrap.sh && ./bootstrap.sh
 ```
 
-> **Not automated:** JetBrains settings — use JetBrains Toolbox's built-in settings sync. macOS System Preferences (Dock, keyboard, trackpad) must be configured manually. iTerm2 — export your profile from Preferences > Profiles > Export. Docker Desktop — not tracked in the Brewfile (installed directly, not via Homebrew); install manually and sign in with your work account.
+> **Not automated:** JetBrains settings (use JetBrains Toolbox's built-in sync), macOS System Preferences (Dock, keyboard, trackpad), and Docker Desktop (not in the Brewfile — install manually and sign in with your work account). iTerm2 is the exception: it's installed via the Brewfile and `setup.sh` points it at the tracked plist automatically. Restart iTerm2 after setup to pick up the preferences.
+
+For tools that aren't needed on every machine (like SDKMAN for Java version management), see [docs/optional-installs.md](docs/optional-installs.md).
 
 ---
 
