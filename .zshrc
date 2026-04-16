@@ -50,8 +50,6 @@ source "$ZSH/oh-my-zsh.sh"
 # Aliases
 # ===================
 alias openz="vim ~/.zshrc"
-alias openv="vim ~/.vimrc"
-alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 
