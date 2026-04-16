@@ -16,6 +16,12 @@ PLUG_FILE="$HOME/.vim/autoload/plug.vim"
 mkdir -p "$HOME/.vim/undodir"
 mkdir -p "$HOME/.vim/autoload"
 
+# Pre-flight: vim must be installed
+if ! command -v vim &>/dev/null; then
+  warn "vim not found. Install it first: brew install vim"
+  exit 1
+fi
+
 # vim-plug
 info "vim-plug"
 if [ -f "$PLUG_FILE" ]; then
