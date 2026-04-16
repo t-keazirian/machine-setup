@@ -98,13 +98,6 @@ cp ~/Code/machine-setup/.zshrc ~/.zshrc
 brew update && brew upgrade && brew cleanup
 ```
 
-To add a package and track it:
-
-```bash
-brew install <package>
-# Then add it to your Brewfile to track it
-```
-
 ---
 
 ## Git aliases
