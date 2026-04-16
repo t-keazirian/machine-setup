@@ -65,11 +65,13 @@ brew_remove "vault"
 
 # ── Homebrew taps ──────────────────────────────────────────────────────────────
 info "Removing Homebrew taps"
-if brew tap | grep -q "^hashicorp/tap$"; then
-  brew untap hashicorp/tap &>/dev/null && ok "hashicorp/tap" || warn "hashicorp/tap"
-else
-  skip "hashicorp/tap"
-fi
+for tap in hashicorp/tap sdkman/tap; do
+  if brew tap | grep -q "^${tap}$"; then
+    brew untap "$tap" &>/dev/null && ok "$tap" || warn "$tap"
+  else
+    skip "$tap"
+  fi
+done
 
 # ── Casks ──────────────────────────────────────────────────────────────────────
 info "Removing casks"
