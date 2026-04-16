@@ -61,7 +61,7 @@ brew_remove openjdk
 brew_remove pandoc
 brew_remove ruby
 brew_remove swagger-codegen
-brew_remove "hashicorp/tap/vault"
+brew_remove "vault"
 
 # ── Homebrew taps ──────────────────────────────────────────────────────────────
 info "Removing Homebrew taps"
