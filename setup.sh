@@ -45,6 +45,7 @@ if command -v brew &>/dev/null; then
 else
   warn "Homebrew not found. Installing..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # Add Homebrew to PATH (path differs by architecture)
   if [ "$(uname -m)" = "arm64" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   else
@@ -121,10 +122,10 @@ fi
 echo ""
 echo -e "${BOLD}Next — pick the modules you want:${RESET}"
 echo ""
-echo "  bash modules/zsh.sh    # Oh My Zsh + plugins"
-echo "  bash modules/node.sh   # NVM + Node LTS"
-echo "  bash modules/vim.sh    # vim-plug + Vim plugins"
-echo "  bash modules/java.sh   # maven-bash-completion"
+echo "  bash $DOTFILES_DIR/modules/zsh.sh    # Oh My Zsh + plugins"
+echo "  bash $DOTFILES_DIR/modules/node.sh   # NVM + Node LTS"
+echo "  bash $DOTFILES_DIR/modules/vim.sh    # vim-plug + Vim plugins"
+echo "  bash $DOTFILES_DIR/modules/java.sh   # maven-bash-completion"
 echo ""
 echo "See README.md for dotfile setup."
 echo ""
