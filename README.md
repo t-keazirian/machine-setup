@@ -51,7 +51,7 @@ After these complete, `setup.sh` prints the commands for any optional modules yo
 | `tree` | CLI | Directory tree viewer |
 | `openssl@3`, `coreutils`, `bash-completion@2`, `zsh`, `zsh-completions` | CLI | Shell and system utilities |
 
-Remove or swap anything you don't want before running `setup.sh`.
+Open `Brewfile` in any text editor, delete the lines you don't want, then run `setup.sh`.
 
 ---
 
