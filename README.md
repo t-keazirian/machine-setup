@@ -31,10 +31,27 @@ Four steps, all idempotent (safe to re-run):
 
 1. Xcode Command Line Tools
 2. Homebrew
-3. Install packages from `Brewfile`
+3. Install packages from `Brewfile` — see below for what's included
 4. Prompt for your git identity (name and email)
 
 After these complete, `setup.sh` prints the commands for any optional modules you want to run. Once you're done, you can delete the repo — nothing depends on it after setup.
+
+---
+
+## What's in the Brewfile
+
+| Package | Type | What it is |
+|---------|------|------------|
+| `iterm2` | App | Terminal emulator (replace with Warp, Ghostty, etc. if you prefer) |
+| `git` | CLI | Version control |
+| `gh` | CLI | GitHub CLI |
+| `vim` | CLI | Text editor |
+| `xcodes` | CLI | Xcode version manager |
+| `nvm` | CLI | Node version manager |
+| `tree` | CLI | Directory tree viewer |
+| `openssl@3`, `coreutils`, `bash-completion@2`, `zsh`, `zsh-completions` | CLI | Shell and system utilities |
+
+Remove or swap anything you don't want before running `setup.sh`.
 
 ---
 
