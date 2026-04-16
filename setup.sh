@@ -7,7 +7,6 @@ DOTFILES_REPO="git@github.com:t-keazirian/machine-setup.git"
 # ── Color helpers ──────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-RED='\033[0;31m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
@@ -23,7 +22,9 @@ done_item()   { DONE+=("$*"); }
 manual_item() { MANUAL+=("$*"); }
 
 # ── 1. Xcode Command Line Tools ────────────────────────────────────────────────
-info "1/14  Xcode Command Line Tools"
+# Note: this is Xcode CLT (~500MB), not the full Xcode IDE (~10GB).
+# Required by Homebrew. Provides git, make, clang.
+info "1/5  Xcode Command Line Tools"
 if xcode-select -p &>/dev/null; then
   skip "Xcode CLT"
 else
@@ -38,7 +39,7 @@ else
 fi
 
 # ── 2. Homebrew ────────────────────────────────────────────────────────────────
-info "2/14  Homebrew"
+info "2/5  Homebrew"
 if command -v brew &>/dev/null; then
   skip "Homebrew"
 else
@@ -55,7 +56,7 @@ else
 fi
 
 # ── 3. Clone dotfiles ──────────────────────────────────────────────────────────
-info "3/14  Dotfiles repo"
+info "3/5  Dotfiles repo"
 if [ -d "$DOTFILES_DIR/.git" ]; then
   skip "Dotfiles repo at $DOTFILES_DIR"
 else
@@ -67,7 +68,7 @@ else
 fi
 
 # ── 4. Homebrew bundle ─────────────────────────────────────────────────────────
-info "4/14  Homebrew bundle"
+info "4/5  Homebrew bundle"
 if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
   skip "All Brewfile packages"
 else
@@ -81,192 +82,27 @@ else
   fi
 fi
 
-# ── 5. Oh My Zsh ──────────────────────────────────────────────────────────────
-info "5/14  Oh My Zsh"
-if [ -d "$HOME/.oh-my-zsh" ]; then
-  skip "Oh My Zsh"
-else
-  warn "Installing Oh My Zsh..."
-  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  ok "Oh My Zsh installed"
-  done_item "Oh My Zsh"
-fi
-
-OMZ_PLUGINS="$HOME/.oh-my-zsh/custom/plugins"
-
-if [ -d "$OMZ_PLUGINS/zsh-autosuggestions" ]; then
-  skip "zsh-autosuggestions plugin"
-else
-  git clone https://github.com/zsh-users/zsh-autosuggestions "$OMZ_PLUGINS/zsh-autosuggestions"
-  ok "zsh-autosuggestions installed"
-  done_item "zsh-autosuggestions plugin"
-fi
-
-if [ -d "$OMZ_PLUGINS/zsh-syntax-highlighting" ]; then
-  skip "zsh-syntax-highlighting plugin"
-else
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting "$OMZ_PLUGINS/zsh-syntax-highlighting"
-  ok "zsh-syntax-highlighting installed"
-  done_item "zsh-syntax-highlighting plugin"
-fi
-
-# ── 6. Dotfile symlinks (bootstrap.sh) ────────────────────────────────────────
-info "6/14  Dotfile symlinks"
-bash "$DOTFILES_DIR/bootstrap.sh"
-done_item "Dotfile symlinks created"
-
-# ── 7. Git identity ───────────────────────────────────────────────────────────
-info "7/14  Git identity"
+# ── 5. Git identity ───────────────────────────────────────────────────────────
+info "5/5  Git identity"
 GIT_NAME="$(git config --global user.name 2>/dev/null || true)"
 GIT_EMAIL="$(git config --global user.email 2>/dev/null || true)"
 
 if [[ "$GIT_NAME" == "Your Name" || -z "$GIT_NAME" || "$GIT_EMAIL" == "you@example.com" || -z "$GIT_EMAIL" ]]; then
-  warn "Git identity is not set. Enter your details (written to ~/.gitconfig via symlink)."
+  warn "Git identity is not set. Enter your details."
   read -rp "  Full name:  " input_name
   read -rp "  Email:      " input_email
   git config --global user.name  "$input_name"
   git config --global user.email "$input_email"
   ok "Git identity set: $input_name <$input_email>"
-  warn "Note: ~/.gitconfig is symlinked to this repo. If you commit, your name/email will be in the diff — review before pushing."
   done_item "Git identity configured"
 else
   skip "Git identity ($GIT_NAME <$GIT_EMAIL>)"
 fi
 
-# ── 8. NVM + Node (LTS) ───────────────────────────────────────────────────────
-info "8/14  NVM + Node LTS"
-export NVM_DIR="$HOME/.nvm"
-mkdir -p "$NVM_DIR"
-
-if [ "$(uname -m)" = "arm64" ]; then
-  NVM_SH="/opt/homebrew/opt/nvm/nvm.sh"
-  NVM_SH_FALLBACK="/opt/homebrew/opt/nvm/libexec/nvm.sh"
-else
-  NVM_SH="/usr/local/opt/nvm/nvm.sh"
-  NVM_SH_FALLBACK="/usr/local/opt/nvm/libexec/nvm.sh"
-fi
-
-if [ ! -f "$NVM_SH" ] && [ -f "$NVM_SH_FALLBACK" ]; then
-  NVM_SH="$NVM_SH_FALLBACK"
-fi
-
-if [ -f "$NVM_SH" ]; then
-  # shellcheck source=/dev/null
-  source "$NVM_SH"
-  if nvm ls 'lts/*' &>/dev/null; then
-    skip "Node LTS"
-  else
-    warn "Installing Node LTS via NVM..."
-    nvm install --lts
-    nvm alias default 'lts/*'
-    ok "Node LTS installed and set as default"
-    done_item "Node LTS (NVM)"
-  fi
-else
-  warn "NVM shell script not found at $NVM_SH. Is nvm installed via Homebrew?"
-  manual_item "Install Node: source $NVM_SH && nvm install --lts && nvm alias default 'lts/*'"
-fi
-
-# ── 9. vim-plug + Vim plugins ─────────────────────────────────────────────────
-info "9/14  vim-plug + Vim plugins"
-PLUG_FILE="$HOME/.vim/autoload/plug.vim"
-mkdir -p "$HOME/.vim/undodir"
-
-if [ -f "$PLUG_FILE" ]; then
-  skip "vim-plug"
-else
-  warn "Installing vim-plug..."
-  mkdir -p "$HOME/.vim/autoload"
-  if curl -fLo "$PLUG_FILE" --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-    ok "vim-plug installed"
-    done_item "vim-plug"
-  else
-    warn "Failed to install vim-plug."
-    manual_item "Install vim-plug: curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-  fi
-fi
-
-if [ -f "$PLUG_FILE" ]; then
-  warn "Running :PlugInstall in Vim (this may take a moment)..."
-  if vim +PlugInstall +qall 2>/dev/null; then
-    ok "Vim plugins installed"
-    done_item "Vim plugins (vim-plug)"
-  else
-    warn "Vim plugin install failed or had errors (may be fine; check manually)."
-    manual_item "Open vim and run :PlugInstall"
-  fi
-else
-  manual_item "Open vim and run :PlugInstall after vim-plug is installed"
-fi
-
-# ── 10. scripts/ permissions ──────────────────────────────────────────────────
-info "10/14 scripts/ permissions"
-SCRIPTS_SRC="$DOTFILES_DIR/scripts"
-
-chmod +x "$SCRIPTS_SRC"/brew-maintenance.sh \
-         "$SCRIPTS_SRC"/brew-maintenance-simple.sh \
-         "$SCRIPTS_SRC"/git-pull-all \
-         "$SCRIPTS_SRC"/who-is-listening
-ok "scripts/ is executable (on PATH via .zshrc)"
-
-# ── 11. ~/.zsh/completions (maven-bash-completion) ────────────────────────────
-info "11/14 zsh completions"
-ZSH_COMPLETIONS_DIR="$HOME/.zsh/completions"
-mkdir -p "$ZSH_COMPLETIONS_DIR"
-
-MAVEN_COMPLETION_DIR="$ZSH_COMPLETIONS_DIR/maven-bash-completion"
-if [ -d "$MAVEN_COMPLETION_DIR" ]; then
-  skip "maven-bash-completion"
-else
-  warn "Cloning maven-bash-completion..."
-  if git clone https://github.com/juven/maven-bash-completion.git "$MAVEN_COMPLETION_DIR"; then
-    ok "maven-bash-completion installed"
-    done_item "maven-bash-completion"
-  else
-    warn "Failed to clone maven-bash-completion."
-    manual_item "Clone maven completion: git clone https://github.com/juven/maven-bash-completion.git ~/.zsh/completions/maven-bash-completion"
-  fi
-fi
-
-# ── 12. iTerm2 preferences ────────────────────────────────────────────────────
-info "12/14 iTerm2 preferences"
-if [[ -f "$DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist" ]]; then
-  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES_DIR/iterm2"
-  defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-  ok "iTerm2 pointed at $DOTFILES_DIR/iterm2 — restart iTerm2 to apply"
-  done_item "iTerm2 preferences configured"
-else
-  warn "iTerm2 plist not found in $DOTFILES_DIR/iterm2 — skipping"
-  manual_item "Copy iTerm2 prefs: defaults export com.googlecode.iterm2 $DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist && plutil -convert xml1 $DOTFILES_DIR/iterm2/com.googlecode.iterm2.plist"
-fi
-
-# ── 13. Claude Code ───────────────────────────────────────────────────────────
-info "13/14 Claude Code"
-if command -v claude &>/dev/null; then
-  skip "Claude Code"
-else
-  warn "Installing Claude Code..."
-  if curl -fsSL https://claude.ai/install.sh | bash; then
-    ok "Claude Code installed"
-    done_item "Claude Code"
-  else
-    warn "Claude Code install failed."
-    manual_item "Install Claude Code: curl -fsSL https://claude.ai/install.sh | bash"
-  fi
-fi
-
-# ── 14. Claude Plugins ────────────────────────────────────────────────────────
-info "14/14 Claude Plugins"
-warn "Plugin install requires authentication — skipping automatic install."
-manual_item "Authenticate personal account: run 'claude' and follow the login prompt"
-manual_item "Authenticate work account (if applicable): run 'claude-work' and follow the login prompt"
-manual_item "Then install plugins: bash $DOTFILES_DIR/scripts/install-claude-plugins.sh"
-
 # ── Summary ────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${RESET}"
-echo -e "${BOLD}  Setup Summary${RESET}"
+echo -e "${BOLD}  Setup complete${RESET}"
 echo -e "${BOLD}══════════════════════════════════════════${RESET}"
 
 if [ ${#DONE[@]} -gt 0 ]; then
@@ -283,5 +119,14 @@ if [ ${#MANUAL[@]} -gt 0 ]; then
   done
 fi
 
+echo ""
+echo -e "${BOLD}Next — pick the modules you want:${RESET}"
+echo ""
+echo "  bash $DOTFILES_DIR/modules/zsh.sh    # Oh My Zsh + plugins"
+echo "  bash $DOTFILES_DIR/modules/node.sh   # NVM + Node LTS"
+echo "  bash $DOTFILES_DIR/modules/vim.sh    # vim-plug + Vim plugins"
+echo "  bash $DOTFILES_DIR/modules/java.sh   # maven-bash-completion"
+echo ""
+echo "See README.md for dotfile setup."
 echo ""
 echo -e "${BOLD}Restart your terminal (or run: source ~/.zshrc)${RESET}"

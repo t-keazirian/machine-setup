@@ -17,9 +17,6 @@ path=(/opt/homebrew/opt/vim/bin /opt/homebrew/opt/python@3.13/bin $path)
 # JetBrains Toolbox shell scripts (idea, webstorm, etc.)
 path=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 
-# Personal scripts
-path=("$HOME/Code/machine-setup/scripts" $path)
-
 # MySQL client
 path=(/opt/homebrew/opt/mysql@8.0/bin $path)
 
@@ -126,23 +123,9 @@ alias openg="vim ~/.gitconfig"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 alias python='/opt/homebrew/opt/python@3.13/bin/python3'
-alias brew-maint="$HOME/Code/machine-setup/scripts/brew-maintenance-simple.sh"
-alias brew-maint-complex="$HOME/Code/machine-setup/scripts/brew-maintenance.sh"
-
 # Claude Code multi-account
 alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
 alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work command claude"
-
-# brewi: install a Homebrew package and immediately regenerate the Brewfile.
-# Usage: brewi <package> [package2 ...]
-# - Passes all arguments to `brew install` (handles multiple packages at once)
-# - Only regenerates the Brewfile if the install succeeds
-# - `brew bundle dump --force` rewrites the entire Brewfile from all currently
-#   installed packages — not just what you installed now. Review the diff before
-#   committing to avoid permanently tracking packages you installed by accident.
-brewi() {
-  brew install "$@" && brew bundle dump --file="$HOME/Code/machine-setup/Brewfile" --force
-}
 
 # kubectl alias + completion
 alias k=kubectl

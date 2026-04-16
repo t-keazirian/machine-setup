@@ -18,13 +18,6 @@ noremap <C-l> <C-w>l
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
 
-" test.vim
-nnoremap <Leader>tn :TestNearest<CR>
-nnoremap <Leader>tf :TestFile<CR>
-nnoremap <Leader>ts :TestSuite<CR>
-nnoremap <Leader>tl :TestLast<CR>
-nnoremap <Leader>tg :TestVisit<CR>
-
 " enable 256‑color support if it isn’t already
 if &term =~ '256color'
   set t_Co=256
