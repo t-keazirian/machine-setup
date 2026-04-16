@@ -4,6 +4,7 @@
 
 export ZSH="$HOME/.oh-my-zsh"
 
+# Use zsh's path array with automatic de-dupe.
 typeset -U path PATH
 
 # Homebrew prefix — /opt/homebrew on Apple Silicon, /usr/local on Intel
@@ -13,6 +14,7 @@ else
   BREW_PREFIX=/usr/local
 fi
 
+# Core paths
 path=("$BREW_PREFIX/sbin" "$BREW_PREFIX/bin" $path)
 
 # --- Completions BEFORE OMZ so compinit sees them ---
@@ -26,7 +28,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
 # Theme & plugins — change ZSH_THEME to your preference
-ZSH_THEME="robbyrussell"
+ZSH_THEME="bira"
 plugins=(
   git
   zsh-autosuggestions
@@ -36,6 +38,7 @@ plugins=(
   macos
 )
 
+# OMZ niceties
 zstyle ':omz:update' mode reminder
 COMPLETION_WAITING_DOTS="true"
 
