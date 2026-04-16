@@ -17,9 +17,6 @@ path=(/opt/homebrew/opt/vim/bin /opt/homebrew/opt/python@3.13/bin $path)
 # JetBrains Toolbox shell scripts (idea, webstorm, etc.)
 path=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 
-# Personal scripts
-path=("$HOME/Code/machine-setup/scripts" $path)
-
 # MySQL client
 path=(/opt/homebrew/opt/mysql@8.0/bin $path)
 

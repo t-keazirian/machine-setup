@@ -14,9 +14,6 @@ path=(/usr/local/sbin /usr/local/bin $path)
 # Extra tools
 path=(/usr/local/opt/vim/bin /usr/local/opt/python@3.13/bin $path)
 
-# Personal scripts
-path=("$HOME/Code/machine-setup/scripts" $path)
-
 # --- Completions BEFORE OMZ so compinit sees them ---
 fpath=(~/.zsh/completions $fpath)
 
