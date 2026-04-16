@@ -25,6 +25,16 @@ cat ~/.ssh/id_ed25519.pub
 
 ## Quick start
 
+**Step 0 — fresh Mac only:** If you don't have git yet, install Xcode Command Line Tools first:
+
+```bash
+xcode-select --install
+```
+
+Not sure? Run `git --version`. If it returns a version number, skip this.
+
+**Step 1 — clone and run:**
+
 ```bash
 git clone git@github.com:t-keazirian/machine-setup.git ~/Code/machine-setup
 bash ~/Code/machine-setup/setup.sh
