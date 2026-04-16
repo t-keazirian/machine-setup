@@ -22,12 +22,14 @@ else
 fi
 
 OMZ_PLUGINS="$HOME/.oh-my-zsh/custom/plugins"
+mkdir -p "$OMZ_PLUGINS"
 
 # zsh-autosuggestions
 info "zsh-autosuggestions"
 if [ -d "$OMZ_PLUGINS/zsh-autosuggestions" ]; then
   skip "zsh-autosuggestions"
 else
+  warn "Installing zsh-autosuggestions..."
   git clone https://github.com/zsh-users/zsh-autosuggestions "$OMZ_PLUGINS/zsh-autosuggestions"
   ok "zsh-autosuggestions installed"
 fi
@@ -37,6 +39,7 @@ info "zsh-syntax-highlighting"
 if [ -d "$OMZ_PLUGINS/zsh-syntax-highlighting" ]; then
   skip "zsh-syntax-highlighting"
 else
+  warn "Installing zsh-syntax-highlighting..."
   git clone https://github.com/zsh-users/zsh-syntax-highlighting "$OMZ_PLUGINS/zsh-syntax-highlighting"
   ok "zsh-syntax-highlighting installed"
 fi
