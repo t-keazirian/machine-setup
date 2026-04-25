@@ -53,7 +53,7 @@ alias openz="vim ~/.zshrc"
 alias update="source ~/.zshrc"
 alias ll="ls -aGl"
 
-export PATH="$HOME/.local/bin:$PATH"
+path=("$HOME/.local/bin" $path)
 
 # Machine-local overrides (secrets, paths, machine-specific config — not tracked by git)
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
